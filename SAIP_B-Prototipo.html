@@ -1,0 +1,2170 @@
+<!DOCTYPE html>
+<html lang="pt-AO">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AlertaBengo — Protótipo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.2/css/bootstrap.min.css">
+
+<style>
+:root{
+  --bg-deep:#0F2B2E;
+  --bg-deep-2:#173B3E;
+  --bg-deep-3:#1F4A4D;
+  --paper:#F1E7CE;
+  --paper-2:#E7D9B8;
+  --paper-3:#DCC99E;
+  --ink:#152220;
+  --ink-soft:#4C5B57;
+  --water:#2C8AA6;
+  --water-deep:#1B5A70;
+  --water-light:#7FC4D6;
+  --clay:#D9622A;
+  --clay-deep:#B54A1B;
+  --safe:#4C9A6A;
+  --warn:#E0A83A;
+  --danger:#C1382A;
+  --font-display:'Fraunces', serif;
+  --font-body:'IBM Plex Sans', sans-serif;
+  --font-mono:'IBM Plex Mono', monospace;
+}
+*{box-sizing:border-box;}
+html,body{height:100%;}
+body{
+  margin:0;
+  font-family:var(--font-body);
+  color:var(--ink);
+  background:var(--paper);
+  overflow-x:hidden;
+}
+.screen{min-height:100vh;width:100%;}
+.hidden{display:none !important;}
+a{text-decoration:none;}
+::selection{background:var(--clay);color:var(--paper);}
+
+/* ============ LOGIN ============ */
+#screen-login{
+  display:grid;
+  grid-template-columns: 1.05fr 1fr;
+  min-height:100vh;
+}
+@media(max-width:900px){
+  #screen-login{grid-template-columns:1fr;}
+  .login-left{min-height:280px;}
+}
+.login-left{
+  background:radial-gradient(120% 120% at 15% 0%, var(--bg-deep-3) 0%, var(--bg-deep) 65%);
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  padding:56px 56px 40px;
+  color:var(--paper);
+  overflow:hidden;
+}
+.brand-eyebrow{
+  font-family:var(--font-mono);
+  font-size:.72rem;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--water-light);
+  opacity:.85;
+}
+.brand-title{
+  font-family:var(--font-display);
+  font-weight:700;
+  font-size:clamp(2.6rem,5vw,4.2rem);
+  line-height:1;
+  margin:.5rem 0 .9rem;
+  letter-spacing:-.01em;
+}
+.brand-title em{
+  font-style:italic;
+  font-weight:400;
+  color:var(--water-light);
+}
+.brand-tagline{
+  max-width:420px;
+  font-size:1.02rem;
+  line-height:1.5;
+  color:#DCEEF2;
+  opacity:.9;
+}
+.login-left .gauge-wrap{
+  position:absolute;
+  right:-30px;
+  bottom:-40px;
+  opacity:.9;
+}
+.login-left .footer-strip{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  font-size:.78rem;
+  color:#B9D6D9;
+  position:relative;
+  z-index:2;
+  flex-wrap:wrap;
+  gap:10px;
+}
+.lang-toggle{
+  display:flex;
+  gap:6px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:999px;
+  padding:3px;
+}
+.lang-chip{
+  font-family:var(--font-mono);
+  font-size:.72rem;
+  padding:5px 12px;
+  border-radius:999px;
+  color:#BFD9DB;
+  cursor:pointer;
+  transition:.15s;
+}
+.lang-chip.active{background:var(--water);color:#06181A;font-weight:600;}
+
+.login-right{
+  background:var(--paper);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:40px 32px;
+  position:relative;
+}
+.login-card{
+  width:100%;
+  max-width:400px;
+}
+.login-card h2{
+  font-family:var(--font-display);
+  font-size:1.9rem;
+  font-weight:600;
+  margin-bottom:.2rem;
+  color:var(--ink);
+}
+.login-card .sub{
+  color:var(--ink-soft);
+  font-size:.92rem;
+  margin-bottom:1.9rem;
+}
+.field{margin-bottom:1.1rem;}
+.field label{
+  display:block;
+  font-size:.76rem;
+  font-weight:600;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+  color:var(--ink-soft);
+  margin-bottom:6px;
+}
+.field .input-shell{
+  display:flex;
+  align-items:center;
+  border:1.5px solid var(--paper-3);
+  background:#fff;
+  border-radius:10px;
+  padding:0 12px;
+  transition:.15s;
+}
+.field .input-shell:focus-within{
+  border-color:var(--water);
+  box-shadow:0 0 0 3px rgba(44,138,166,.15);
+}
+.field .input-shell i{color:var(--ink-soft);font-size:.95rem;}
+.field input{
+  border:0;
+  outline:0;
+  background:transparent;
+  padding:11px 10px;
+  width:100%;
+  font-family:var(--font-body);
+  font-size:.95rem;
+  color:var(--ink);
+}
+.field .toggle-eye{cursor:pointer;color:var(--ink-soft);}
+.row-between{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:.83rem;
+  margin-bottom:1.4rem;
+}
+.row-between a{color:var(--water-deep);font-weight:600;}
+.row-between a:hover{color:var(--clay);}
+.btn-clay{
+  width:100%;
+  background:var(--clay);
+  color:#fff;
+  border:0;
+  border-radius:10px;
+  padding:13px;
+  font-weight:600;
+  font-size:.98rem;
+  letter-spacing:.01em;
+  transition:.15s;
+}
+.btn-clay:hover{background:var(--clay-deep);}
+.divider-word{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  color:var(--ink-soft);
+  font-size:.78rem;
+  margin:1.4rem 0;
+}
+.divider-word::before,.divider-word::after{
+  content:"";flex:1;height:1px;background:var(--paper-3);
+}
+.create-account{
+  text-align:center;
+  font-size:.9rem;
+  color:var(--ink-soft);
+}
+.create-account a{color:var(--clay-deep);font-weight:600;}
+.role-note{
+  margin-top:1.6rem;
+  font-size:.78rem;
+  color:var(--ink-soft);
+  background:var(--paper-2);
+  border-radius:10px;
+  padding:10px 12px;
+  display:flex;
+  gap:8px;
+  align-items:flex-start;
+}
+.role-note i{color:var(--water-deep);margin-top:2px;}
+
+/* ============ DASHBOARD ============ */
+#screen-dashboard{
+  display:grid;
+  grid-template-columns:250px 1fr;
+  min-height:100vh;
+  background:var(--paper);
+}
+.sidebar{
+  background:var(--bg-deep);
+  color:var(--paper);
+  padding:26px 18px;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  position:sticky;
+  top:0;
+  align-self:start;
+  height:100vh;
+  overflow-y:auto;
+  scrollbar-width:thin;
+}
+.sidebar .brand{
+  font-family:var(--font-display);
+  font-size:1.4rem;
+  font-weight:700;
+  padding:0 10px 22px;
+  color:#fff;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.sidebar .brand i{color:var(--water-light);}
+.nav-item{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  padding:11px 12px;
+  border-radius:9px;
+  color:#BFD6D8;
+  font-size:.9rem;
+  font-weight:500;
+  cursor:pointer;
+  border-left:3px solid transparent;
+  transition:.15s;
+}
+.nav-item i{font-size:1rem;width:18px;text-align:center;}
+.nav-item:hover{background:rgba(255,255,255,.05);color:#fff;}
+.nav-item.active{
+  background:rgba(217,98,42,.14);
+  border-left:3px solid var(--clay);
+  color:#fff;
+}
+.nav-item.disabled{opacity:.45;cursor:not-allowed;}
+.nav-item.disabled:hover{background:transparent;color:#BFD6D8;}
+.nav-soon{
+  margin-left:auto;
+  font-family:var(--font-mono);
+  font-size:.62rem;
+  background:rgba(255,255,255,.08);
+  padding:2px 6px;
+  border-radius:5px;
+}
+.sidebar .nav-group-label{
+  font-family:var(--font-mono);
+  font-size:.66rem;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:#6E8A8C;
+  margin:16px 12px 4px;
+}
+.sidebar .logout{margin-top:auto;}
+
+.main{padding:24px 32px 48px;}
+.topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:22px;
+  flex-wrap:wrap;
+  gap:14px;
+}
+.topbar h1{
+  font-family:var(--font-display);
+  font-size:1.55rem;
+  font-weight:600;
+  margin:0;
+  color:var(--ink);
+}
+.topbar .location{
+  font-size:.82rem;
+  color:var(--ink-soft);
+  font-family:var(--font-mono);
+}
+.topbar-right{display:flex;align-items:center;gap:16px;}
+.icon-btn{
+  width:38px;height:38px;border-radius:10px;
+  background:#fff;border:1px solid var(--paper-3);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--ink-soft);position:relative;cursor:pointer;
+}
+.icon-btn .dot{
+  position:absolute;top:6px;right:7px;width:7px;height:7px;
+  background:var(--clay);border-radius:50%;
+}
+.user-chip{
+  display:flex;align-items:center;gap:10px;
+  background:#fff;border:1px solid var(--paper-3);
+  border-radius:999px;padding:5px 14px 5px 6px;cursor:pointer;
+}
+.user-chip .avatar{
+  width:30px;height:30px;border-radius:50%;
+  background:var(--water-deep);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:600;font-size:.82rem;
+}
+.user-chip .role{
+  font-size:.68rem;color:var(--ink-soft);
+  font-family:var(--font-mono);
+}
+
+.alert-banner{
+  display:flex;align-items:center;gap:16px;
+  background:linear-gradient(90deg, rgba(224,168,58,.16), rgba(224,168,58,.05));
+  border:1px solid rgba(224,168,58,.45);
+  border-left:5px solid var(--warn);
+  border-radius:12px;
+  padding:16px 20px;
+  margin-bottom:22px;
+}
+.alert-banner i{font-size:1.6rem;color:var(--warn);}
+.alert-banner .lvl{
+  font-weight:700;letter-spacing:.03em;
+  font-family:var(--font-mono);
+  color:#8A6414;
+}
+.alert-banner .desc{font-size:.86rem;color:var(--ink-soft);}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(12,1fr);
+  gap:18px;
+}
+.card{
+  background:#fff;
+  border:1px solid var(--paper-3);
+  border-radius:14px;
+  padding:20px;
+}
+.card h3{
+  font-family:var(--font-display);
+  font-size:1.05rem;
+  font-weight:600;
+  margin:0 0 14px;
+  color:var(--ink);
+  display:flex;align-items:center;gap:8px;
+}
+.card h3 i{color:var(--water-deep);font-size:.95rem;}
+.card .card-foot{
+  font-size:.74rem;color:var(--ink-soft);
+  margin-top:12px;font-family:var(--font-mono);
+}
+
+.gauge-card{grid-column:span 4;display:flex;gap:18px;}
+.gauge-readout{flex:1;}
+.gauge-readout .big-number{
+  font-family:var(--font-display);
+  font-size:2.6rem;font-weight:700;color:var(--water-deep);
+  line-height:1;
+}
+.gauge-readout .unit{font-size:1.1rem;color:var(--ink-soft);font-weight:400;}
+.gauge-readout .trend{
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:.8rem;font-weight:600;color:var(--warn);
+  margin-top:6px;
+}
+.gauge-legend{margin-top:16px;display:flex;flex-direction:column;gap:6px;}
+.gauge-legend .lg-item{display:flex;align-items:center;gap:8px;font-size:.76rem;color:var(--ink-soft);}
+.gauge-legend .sw{width:10px;height:10px;border-radius:3px;}
+
+.map-card{grid-column:span 8;}
+#leafletMap{height:400px;border-radius:10px;overflow:hidden;border:2px solid var(--water-deep);}
+.map-legend{display:flex;gap:18px;margin-top:10px;flex-wrap:wrap;}
+.map-legend .lg-item{display:flex;align-items:center;gap:7px;font-size:.78rem;color:var(--ink-soft);}
+.map-legend .sw{width:11px;height:11px;border-radius:50%;flex-shrink:0;}
+@media(max-width:600px){#leafletMap{height:300px;}}
+
+.sensors-card{grid-column:span 5;}
+.sensor-row{
+  display:flex;align-items:center;gap:12px;
+  padding:11px 0;border-bottom:1px solid var(--paper-2);
+}
+.sensor-row:last-child{border-bottom:0;padding-bottom:0;}
+.sensor-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.sensor-dot.online{background:var(--safe);box-shadow:0 0 0 3px rgba(76,154,106,.18);}
+.sensor-dot.offline{background:var(--danger);box-shadow:0 0 0 3px rgba(193,56,42,.18);}
+.sensor-name{font-size:.86rem;font-weight:600;color:var(--ink);}
+.sensor-meta{font-size:.74rem;color:var(--ink-soft);font-family:var(--font-mono);}
+.sensor-val{margin-left:auto;text-align:right;font-family:var(--font-mono);font-size:.86rem;color:var(--ink);}
+
+.trend-card{grid-column:span 7;}
+.boletins-card{grid-column:span 5;}
+.bol-row{padding:10px 0;border-bottom:1px solid var(--paper-2);}
+.bol-row:last-child{border-bottom:0;}
+.bol-tag{
+  font-size:.66rem;font-weight:700;padding:2px 8px;border-radius:999px;
+  font-family:var(--font-mono);letter-spacing:.03em;
+}
+.tag-atencao{background:rgba(224,168,58,.18);color:#8A6414;}
+.tag-info{background:rgba(44,138,166,.16);color:var(--water-deep);}
+.tag-normal{background:rgba(76,154,106,.16);color:#316A45;}
+.bol-title{font-size:.86rem;font-weight:600;margin:6px 0 3px;color:var(--ink);}
+.bol-date{font-size:.72rem;color:var(--ink-soft);font-family:var(--font-mono);}
+
+.stats-card{grid-column:span 12;display:flex;gap:0;padding:0;overflow:hidden;}
+.stat-block{
+  flex:1;padding:18px 22px;border-right:1px solid var(--paper-2);
+  display:flex;flex-direction:column;gap:4px;
+}
+.stat-block:last-child{border-right:0;}
+.stat-block .stat-label{font-size:.72rem;color:var(--ink-soft);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.05em;}
+.stat-block .stat-val{font-family:var(--font-display);font-size:1.5rem;font-weight:700;color:var(--ink);}
+.stat-block .stat-val span{font-size:.9rem;font-weight:400;color:var(--ink-soft);}
+
+@media(max-width:1100px){
+  .gauge-card,.map-card,.sensors-card,.trend-card,.boletins-card{grid-column:span 12;}
+}
+@media(max-width:800px){
+  #screen-dashboard{grid-template-columns:1fr;}
+  .sidebar{flex-direction:row;flex-wrap:wrap;padding:14px;position:static;height:auto;overflow-y:visible;}
+  .sidebar .brand{padding:6px 10px;width:100%;}
+  .sidebar .nav-group-label{display:none;}
+  .sidebar .logout{margin-left:auto;}
+  .sidebar .lang-toggle{margin-left:auto;}
+}
+
+/* ---------- page switching ---------- */
+.page{display:none;}
+.page.active{display:block;}
+
+/* ---------- Gestão de Utilizadores ---------- */
+.page-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:14px;}
+.page-head h1{font-family:var(--font-display);font-size:1.55rem;font-weight:600;margin:0 0 4px;color:var(--ink);}
+.page-head .sub{font-size:.85rem;color:var(--ink-soft);}
+.btn-clay-sm{
+  background:var(--clay);color:#fff;border:0;border-radius:9px;
+  padding:10px 16px;font-weight:600;font-size:.86rem;display:inline-flex;align-items:center;gap:7px;
+  cursor:pointer;transition:.15s;
+}
+.btn-clay-sm:hover{background:var(--clay-deep);}
+.toolbar{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap;}
+.search-shell{
+  flex:1;min-width:220px;display:flex;align-items:center;gap:8px;
+  background:#fff;border:1.5px solid var(--paper-3);border-radius:10px;padding:0 12px;
+}
+.search-shell i{color:var(--ink-soft);}
+.search-shell input{border:0;outline:0;padding:10px 8px;width:100%;font-family:var(--font-body);font-size:.88rem;background:transparent;}
+.filter-chip{
+  font-family:var(--font-mono);font-size:.76rem;padding:8px 14px;border-radius:9px;
+  background:#fff;border:1.5px solid var(--paper-3);color:var(--ink-soft);cursor:pointer;white-space:nowrap;
+}
+.filter-chip.active{background:var(--water-deep);color:#fff;border-color:var(--water-deep);}
+
+.table-card{background:#fff;border:1px solid var(--paper-3);border-radius:14px;overflow:hidden;}
+table.users-table{width:100%;border-collapse:collapse;}
+table.users-table thead th{
+  text-align:left;font-family:var(--font-mono);font-size:.7rem;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--ink-soft);background:var(--paper-2);padding:12px 18px;font-weight:600;
+}
+table.users-table tbody td{padding:14px 18px;border-bottom:1px solid var(--paper-2);font-size:.87rem;color:var(--ink);vertical-align:middle;}
+table.users-table tbody tr:last-child td{border-bottom:0;}
+table.users-table tbody tr:hover{background:#FBF7EC;}
+.u-person{display:flex;align-items:center;gap:10px;}
+.u-avatar{
+  width:34px;height:34px;border-radius:50%;color:#fff;font-weight:600;font-size:.8rem;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.u-name{font-weight:600;}
+.u-email{font-size:.76rem;color:var(--ink-soft);font-family:var(--font-mono);}
+.role-badge{
+  font-size:.7rem;font-weight:700;padding:3px 10px;border-radius:999px;font-family:var(--font-mono);letter-spacing:.02em;
+}
+.role-admin{background:rgba(193,56,42,.12);color:var(--danger);}
+.role-tecnico{background:rgba(44,138,166,.14);color:var(--water-deep);}
+.role-voluntario{background:rgba(76,154,106,.14);color:#316A45;}
+.status-dot{display:inline-flex;align-items:center;gap:6px;font-size:.82rem;}
+.status-dot::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--safe);}
+.status-dot.inactive::before{background:var(--ink-soft);}
+.row-actions{display:flex;gap:6px;justify-content:flex-end;}
+.icon-action{
+  width:30px;height:30px;border-radius:8px;border:1px solid var(--paper-3);background:#fff;
+  display:flex;align-items:center;justify-content:center;color:var(--ink-soft);cursor:pointer;transition:.15s;
+}
+.icon-action:hover{border-color:var(--water-deep);color:var(--water-deep);}
+.icon-action.danger:hover{border-color:var(--danger);color:var(--danger);}
+.table-foot{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;font-size:.78rem;color:var(--ink-soft);}
+
+/* modal */
+.modal-veil{
+  position:fixed;inset:0;background:rgba(15,43,46,.55);z-index:1000;
+  display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:.2s;
+}
+.modal-veil.show{opacity:1;pointer-events:auto;}
+.modal-box{
+  background:var(--paper);border-radius:16px;width:100%;max-width:460px;
+  padding:28px;transform:translateY(14px);transition:.2s;max-height:88vh;overflow-y:auto;
+}
+.modal-veil.show .modal-box{transform:translateY(0);}
+.modal-box h3{font-family:var(--font-display);font-size:1.25rem;margin:0 0 4px;color:var(--ink);}
+.modal-box .sub{font-size:.82rem;color:var(--ink-soft);margin-bottom:18px;}
+.modal-box select{
+  width:100%;border:1.5px solid var(--paper-3);background:#fff;border-radius:10px;
+  padding:11px 12px;font-family:var(--font-body);font-size:.9rem;color:var(--ink);outline:0;
+}
+.modal-box select:focus{border-color:var(--water);}
+.modal-actions{display:flex;gap:10px;margin-top:22px;}
+.btn-ghost{
+  flex:1;background:transparent;border:1.5px solid var(--paper-3);border-radius:10px;
+  padding:11px;font-weight:600;font-size:.9rem;color:var(--ink-soft);cursor:pointer;
+}
+.btn-ghost:hover{border-color:var(--ink-soft);color:var(--ink);}
+.modal-actions .btn-clay{flex:1;}
+
+/* ---------- extra badges / status ---------- */
+.role-neutral{background:rgba(76,91,87,.12);color:var(--ink-soft);}
+.role-warn{background:rgba(224,168,58,.18);color:#8A6414;}
+.role-danger{background:rgba(193,56,42,.12);color:var(--danger);}
+.role-safe{background:rgba(76,154,106,.14);color:#316A45;}
+textarea.msg-input{
+  width:100%;border:1.5px solid var(--paper-3);background:#fff;border-radius:10px;
+  padding:11px 12px;font-family:var(--font-body);font-size:.9rem;color:var(--ink);outline:0;resize:vertical;min-height:110px;
+}
+textarea.msg-input:focus{border-color:var(--water);}
+
+/* live monitor cards */
+.live-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:18px;}
+.live-card{grid-column:span 6;background:#fff;border:1px solid var(--paper-3);border-radius:14px;padding:22px;}
+@media(max-width:1000px){.live-card{grid-column:span 12;}}
+.live-card .lc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.live-card .lc-top h3{margin:0;}
+.pulse-dot{width:9px;height:9px;border-radius:50%;background:var(--safe);position:relative;}
+.pulse-dot::after{
+  content:"";position:absolute;inset:-5px;border-radius:50%;border:2px solid var(--safe);
+  animation:pulse 1.8s ease-out infinite;
+}
+@keyframes pulse{0%{transform:scale(.6);opacity:.9;}100%{transform:scale(1.8);opacity:0;}}
+.live-number{font-family:var(--font-display);font-weight:700;font-size:3rem;color:var(--water-deep);line-height:1;}
+.live-number span{font-size:1.2rem;font-weight:400;color:var(--ink-soft);}
+.live-sub{font-size:.78rem;color:var(--ink-soft);font-family:var(--font-mono);margin-top:6px;}
+.feed-list{max-height:180px;overflow-y:auto;margin-top:14px;}
+.feed-row{display:flex;justify-content:space-between;font-size:.78rem;font-family:var(--font-mono);padding:6px 0;border-bottom:1px dashed var(--paper-2);color:var(--ink-soft);}
+.feed-row:last-child{border-bottom:0;}
+.feed-row b{color:var(--ink);font-weight:600;}
+
+/* threshold sliders */
+.threshold-row{display:flex;align-items:center;gap:16px;padding:14px 0;border-bottom:1px solid var(--paper-2);}
+.threshold-row:last-child{border-bottom:0;}
+.threshold-row .th-label{width:190px;flex-shrink:0;}
+.threshold-row .th-label b{display:block;font-size:.88rem;color:var(--ink);}
+.threshold-row .th-label span{font-size:.72rem;color:var(--ink-soft);}
+.threshold-row input[type=range]{flex:1;accent-color:var(--clay);}
+.threshold-row .th-val{width:64px;text-align:right;font-family:var(--font-mono);font-weight:600;font-size:.86rem;flex-shrink:0;}
+.toggle-switch{position:relative;width:44px;height:24px;flex-shrink:0;}
+.toggle-switch input{opacity:0;width:0;height:0;}
+.toggle-slider{position:absolute;inset:0;background:var(--paper-3);border-radius:999px;cursor:pointer;transition:.2s;}
+.toggle-slider::before{content:"";position:absolute;width:18px;height:18px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25);}
+.toggle-switch input:checked + .toggle-slider{background:var(--safe);}
+.toggle-switch input:checked + .toggle-slider::before{transform:translateX(20px);}
+
+/* timeline (histórico) */
+.timeline{position:relative;margin-left:8px;padding-left:26px;border-left:2px solid var(--paper-3);}
+.tl-item{position:relative;padding-bottom:22px;}
+.tl-item:last-child{padding-bottom:0;}
+.tl-item::before{
+  content:"";position:absolute;left:-32px;top:2px;width:12px;height:12px;border-radius:50%;
+  background:var(--water-deep);border:2px solid var(--paper);
+}
+.tl-item.tl-danger::before{background:var(--danger);}
+.tl-item.tl-safe::before{background:var(--safe);}
+.tl-item .tl-date{font-family:var(--font-mono);font-size:.72rem;color:var(--ink-soft);}
+.tl-item .tl-title{font-weight:600;font-size:.9rem;color:var(--ink);margin:2px 0 3px;}
+.tl-item .tl-desc{font-size:.82rem;color:var(--ink-soft);}
+
+/* public alert page */
+#screen-public{background:var(--paper);min-height:100vh;display:none;}
+#screen-public.active{display:block;}
+.public-hero{
+  background:radial-gradient(120% 140% at 20% 0%, var(--bg-deep-3) 0%, var(--bg-deep) 70%);
+  color:var(--paper);padding:44px 8vw 54px;
+}
+.public-hero .pb-back{color:var(--water-light);font-size:.82rem;cursor:pointer;display:inline-flex;gap:6px;align-items:center;margin-bottom:18px;}
+.public-hero h1{font-family:var(--font-display);font-size:clamp(1.8rem,4vw,2.6rem);margin:0 0 8px;}
+.public-hero .ph-level{
+  display:inline-flex;align-items:center;gap:10px;background:rgba(224,168,58,.18);
+  border:1px solid rgba(224,168,58,.5);color:#F4D48C;padding:9px 18px;border-radius:999px;
+  font-family:var(--font-mono);font-weight:600;font-size:.85rem;
+}
+.public-body{padding:36px 8vw 60px;max-width:1000px;}
+.pb-card{background:#fff;border:1px solid var(--paper-3);border-radius:14px;padding:22px;margin-bottom:16px;}
+.pb-card h3{font-family:var(--font-display);margin:0 0 10px;font-size:1.1rem;}
+.pb-rec{display:flex;gap:10px;padding:8px 0;font-size:.9rem;color:var(--ink);}
+.pb-rec i{color:var(--water-deep);margin-top:2px;}
+
+/* toast */
+#toast-container{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+  z-index:999;display:flex;flex-direction:column;gap:8px;align-items:center;
+}
+.toast-msg{
+  background:var(--bg-deep);color:#fff;font-size:.84rem;
+  padding:11px 18px;border-radius:999px;box-shadow:0 8px 24px rgba(0,0,0,.25);
+  opacity:0;transform:translateY(10px);transition:.25s;
+  display:flex;align-items:center;gap:8px;
+}
+.toast-msg.show{opacity:1;transform:translateY(0);}
+.toast-msg i{color:var(--water-light);}
+</style>
+</head>
+<body>
+
+<!-- ============ SCREEN: LOGIN ============ -->
+<div id="screen-login" class="screen">
+  <div class="login-left">
+    <div>
+      <div class="brand-eyebrow">Protecção Civil · Governo Provincial do Bengo</div>
+      <h1 class="brand-title">Alerta<em>Bengo</em></h1>
+      <p class="brand-tagline">Sistema de alerta de cheias do Bairro Mubungo. Monitoriza o nível do rio, a chuva e os sensores de campo em tempo real.</p>
+    </div>
+
+    <div class="gauge-wrap">
+      <svg id="gaugeDecorative" width="170" height="320" viewBox="0 0 170 320">
+        <defs>
+          <clipPath id="tubeClipDeco"><rect x="40" y="20" width="60" height="260" rx="28"/></clipPath>
+        </defs>
+        <rect x="40" y="20" width="60" height="260" rx="28" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="2"/>
+        <g clip-path="url(#tubeClipDeco)">
+          <rect id="decoWaterFill" x="40" y="150" width="60" height="130" fill="var(--water-deep)" opacity=".55"/>
+          <g id="decoWave" transform="translate(0,150)">
+            <path d="M0 10 Q 15 0 30 10 T 60 10 T 90 10 T 120 10 V 40 H 0 Z" fill="var(--water)" opacity=".5"/>
+          </g>
+        </g>
+      </svg>
+    </div>
+
+    <div class="footer-strip">
+      <span>AlertaBengo v1 · Protótipo de interface</span>
+      <a href="#" onclick="openPublicPage();return false;" style="color:#DCEEF2;text-decoration:underline;">Ver alertas públicos</a>
+      <div class="lang-toggle" id="langToggleLogin">
+        <div class="lang-chip active" data-lang="pt">PT</div>
+        <div class="lang-chip" data-lang="kmb">Kimbundu</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="login-right">
+    <div class="login-card">
+      <h2 data-i18n="loginTitle">Entrar no sistema</h2>
+      <p class="sub" data-i18n="loginSub">Acesse o painel de monitorização do Bairro Mubungo.</p>
+
+      <form id="loginForm">
+        <div class="field">
+          <label data-i18n="labelUser">Utilizador ou e-mail</label>
+          <div class="input-shell">
+            <i class="bi bi-person"></i>
+            <input type="text" placeholder="ex: tecnico.mubungo" value="tecnico.mubungo" required>
+          </div>
+        </div>
+        <div class="field">
+          <label data-i18n="labelPass">Senha</label>
+          <div class="input-shell">
+            <i class="bi bi-lock"></i>
+            <input id="passInput" type="password" placeholder="••••••••" value="mubungo2026">
+            <i class="bi bi-eye toggle-eye" id="toggleEye"></i>
+          </div>
+        </div>
+        <div class="row-between">
+          <label style="display:flex;align-items:center;gap:6px;color:var(--ink-soft);font-weight:500;">
+            <input type="checkbox" checked style="accent-color:var(--water-deep);"> <span data-i18n="remember">Manter sessão</span>
+          </label>
+          <a href="#" data-i18n="forgot" onclick="openForgotModal();return false;">Esqueci a minha senha</a>
+        </div>
+        <button type="submit" class="btn-clay" data-i18n="enterBtn">Entrar</button>
+      </form>
+
+      <div class="divider-word"><span data-i18n="or">ou</span></div>
+      <div class="create-account" data-i18n="noAccount">Ainda não tem conta? <a href="#" onclick="openRegisterModal();return false;">Criar conta</a></div>
+
+      <div class="role-note">
+        <i class="bi bi-info-circle"></i>
+        <span data-i18n="roleNote">O nível de acesso (Administrador, Técnico ou Voluntário) é definido automaticamente após a autenticação.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SCREEN: DASHBOARD ============ -->
+<div id="screen-dashboard" class="screen hidden">
+  <aside class="sidebar">
+    <div class="brand"><i class="bi bi-droplet-half"></i> AlertaBengo</div>
+
+    <div class="nav-group-label" data-i18n="grp2">2 · Administração</div>
+    <div class="nav-item active" id="nav-usuarios" onclick="showPage('page-usuarios', this)"><i class="bi bi-people"></i> <span data-i18n="navUsuarios">Gestão de Utilizadores</span></div>
+
+    <div class="nav-group-label" data-i18n="grp34">3–4 · Sensores</div>
+    <div class="nav-item" id="nav-sensores-mon" onclick="showPage('page-sensores-mon', this)"><i class="bi bi-rulers"></i> <span data-i18n="navSensoresMon">Monitorização dos Sensores</span></div>
+    <div class="nav-item" id="nav-tempo-real" onclick="showPage('page-tempo-real', this)"><i class="bi bi-activity"></i> <span data-i18n="navTempoReal">Monitorização em Tempo Real</span></div>
+
+    <div class="nav-group-label" data-i18n="grp56">5–6 · Documentos</div>
+    <div class="nav-item" id="nav-boletins" onclick="showPage('page-boletins', this)"><i class="bi bi-file-earmark-text"></i> <span data-i18n="navBoletins">Gestão de Boletins</span></div>
+    <div class="nav-item" id="nav-laudos" onclick="showPage('page-laudos', this)"><i class="bi bi-clipboard-data"></i> <span data-i18n="navLaudos">Gestão de Laudos Técnicos</span></div>
+
+    <div class="nav-group-label" data-i18n="grp79">7–9 · Comunicação e alertas</div>
+    <div class="nav-item" id="nav-mensagens" onclick="showPage('page-mensagens', this)"><i class="bi bi-chat-dots"></i> <span data-i18n="navMensagens">Mensagens / Suporte</span></div>
+    <div class="nav-item" id="nav-auto-alertas" onclick="showPage('page-auto-alertas', this)"><i class="bi bi-bell"></i> <span data-i18n="navAutoAlertas">Emissão Automática de Alertas</span></div>
+    <div class="nav-item" id="nav-gestao-sensores" onclick="showPage('page-gestao-sensores', this)"><i class="bi bi-broadcast"></i> <span data-i18n="navGestaoSensores">Gestão dos Sensores</span></div>
+
+    <div class="nav-group-label" data-i18n="grp1012">10–12 · Visão geral</div>
+    <div class="nav-item" id="nav-painel" onclick="showPage('page-painel', this)"><i class="bi bi-grid-1x2"></i> <span data-i18n="navPainel">Painel de Monitorização</span></div>
+    <div class="nav-item" id="nav-historico" onclick="showPage('page-historico', this)"><i class="bi bi-clock-history"></i> <span data-i18n="navHistorico">Histórico de Ocorrências</span></div>
+    <div class="nav-item" id="nav-publico" onclick="openPublicPage()"><i class="bi bi-megaphone"></i> <span data-i18n="navPublico">Consulta Pública de Alertas</span></div>
+
+    <div class="lang-toggle" id="langToggleSidebar" style="margin-top:16px;">
+      <div class="lang-chip active" data-lang="pt">PT</div>
+      <div class="lang-chip" data-lang="kmb">Kimbundu</div>
+    </div>
+    <div class="nav-item logout" onclick="showLogin()"><i class="bi bi-box-arrow-left"></i> <span data-i18n="navSair">Sair</span></div>
+  </aside>
+
+  <main class="main">
+
+  <div class="page" id="page-painel">
+    <div class="topbar">
+      <div>
+        <h1 data-i18n="welcome">Bem-vindo, Kiluanji</h1>
+        <div class="location"><i class="bi bi-geo-alt"></i> <span data-i18n="topLocation">Bairro Mubungo · Província do Bengo — actualizado há 3 min</span></div>
+      </div>
+      <div class="topbar-right">
+        <div class="icon-btn"><i class="bi bi-bell"></i><span class="dot"></span></div>
+        <div class="user-chip">
+          <div class="avatar">KL</div>
+          <div>
+            <div style="font-size:.84rem;font-weight:600;">Kiluanji M.</div>
+            <div class="role">TÉCNICO</div>
+          </div>
+          <i class="bi bi-chevron-down" style="font-size:.7rem;color:var(--ink-soft);"></i>
+        </div>
+      </div>
+    </div>
+
+    <div class="alert-banner">
+      <i class="bi bi-exclamation-triangle"></i>
+      <div>
+        <div class="lvl" data-i18n="alertLvl">NÍVEL DE ALERTA: ATENÇÃO</div>
+        <div class="desc" data-i18n="alertDesc">O Rio Bengo subiu 34 cm nas últimas 6 horas junto à Ponte de Mubungo. Continue a monitorizar os sensores.</div>
+      </div>
+    </div>
+
+    <div class="grid">
+
+      <div class="card gauge-card">
+        <svg width="90" height="230" viewBox="0 0 90 230" style="flex-shrink:0;">
+          <rect x="15" y="10" width="50" height="200" rx="24" fill="#fff" stroke="var(--paper-3)" stroke-width="2"/>
+          <defs><clipPath id="tubeClip"><rect x="15" y="10" width="50" height="200" rx="24"/></clipPath></defs>
+          <g clip-path="url(#tubeClip)">
+            <rect id="waterFill" x="15" y="105" width="50" height="105" fill="var(--water)"/>
+          </g>
+          <!-- thresholds: scale 0 to 3.5m across 200px (bottom y=210 to top y=10) -->
+          <g font-family="IBM Plex Mono" font-size="8" fill="var(--ink-soft)">
+            <line x1="65" y1="210" x2="70" y2="210" stroke="var(--paper-3)"/>
+            <line x1="65" y1="153" x2="70" y2="153" stroke="var(--safe)"/>
+            <line x1="65" y1="96" x2="70" y2="96" stroke="var(--warn)"/>
+            <line x1="65" y1="39" x2="70" y2="39" stroke="var(--danger)"/>
+          </g>
+        </svg>
+        <div class="gauge-readout">
+          <h3><i class="bi bi-water"></i><span data-i18n="gaugeTitle">Nível do Rio Bengo</span></h3>
+          <div class="big-number">2,15<span class="unit">m</span></div>
+          <div class="trend"><i class="bi bi-arrow-up-short"></i> +0,34 m nas últimas 6h</div>
+          <div class="gauge-legend">
+            <div class="lg-item"><span class="sw" style="background:var(--safe);"></span> <span data-i18n="lvlNormal">Normal · até 1,20 m</span></div>
+            <div class="lg-item"><span class="sw" style="background:var(--warn);"></span> <span data-i18n="lvlAtencao">Atenção · 1,20–2,00 m</span></div>
+            <div class="lg-item"><span class="sw" style="background:var(--danger);"></span> <span data-i18n="lvlEmergencia">Emergência · acima de 2,80 m</span></div>
+          </div>
+          <div class="card-foot" data-i18n="gaugeFoot">Sensor: Régua Fluviométrica — Ponte de Mubungo</div>
+        </div>
+      </div>
+
+      <div class="card map-card">
+        <h3><i class="bi bi-pin-map"></i><span data-i18n="mapTitle">Mapa de sensores — Bairro Mubungo</span></h3>
+        <div id="leafletMap"></div>
+        <div class="map-legend">
+          <div class="lg-item"><span class="sw" style="background:var(--safe);"></span> <span data-i18n="mapOnline">Sensor online</span></div>
+          <div class="lg-item"><span class="sw" style="background:var(--danger);"></span> <span data-i18n="mapOffline">Sensor offline</span></div>
+        </div>
+        <div class="card-foot" data-i18n="mapFoot">3 pontos de monitorização activos na área do bairro</div>
+      </div>
+
+      <div class="card sensors-card">
+        <h3><i class="bi bi-broadcast"></i><span data-i18n="sensorsCardTitle">Estado dos sensores</span></h3>
+        <div class="sensor-row">
+          <span class="sensor-dot online"></span>
+          <div>
+            <div class="sensor-name">Régua Fluviométrica — Ponte de Mubungo</div>
+            <div class="sensor-meta">Arduino Uno · leitura há 4 min</div>
+          </div>
+          <div class="sensor-val">2,15 m</div>
+        </div>
+        <div class="sensor-row">
+          <span class="sensor-dot online"></span>
+          <div>
+            <div class="sensor-name">Pluviómetro — Escola Primária do Mubungo</div>
+            <div class="sensor-meta">ESP32 · leitura há 2 min</div>
+          </div>
+          <div class="sensor-val">38 mm/24h</div>
+        </div>
+        <div class="sensor-row">
+          <span class="sensor-dot offline"></span>
+          <div>
+            <div class="sensor-name">Régua Fluviométrica — Cais Velho</div>
+            <div class="sensor-meta">ESP32 · sem sinal há 41 min</div>
+          </div>
+          <div class="sensor-val" style="color:var(--danger);">offline</div>
+        </div>
+      </div>
+
+      <div class="card trend-card">
+        <h3><i class="bi bi-graph-up"></i><span data-i18n="trendCardTitle">Variação do nível — últimas 24h</span></h3>
+        <canvas id="trendChart" height="90"></canvas>
+      </div>
+
+      <div class="card boletins-card">
+        <h3><i class="bi bi-file-earmark-text"></i><span data-i18n="boletinsCardTitle">Boletins recentes</span></h3>
+        <div class="bol-row">
+          <span class="bol-tag tag-atencao">ATENÇÃO</span>
+          <div class="bol-title">Boletim Nº 014 — Subida do nível do Rio Bengo</div>
+          <div class="bol-date">03/08/2026 · 07:40</div>
+        </div>
+        <div class="bol-row">
+          <span class="bol-tag tag-info">INFORMATIVO</span>
+          <div class="bol-title">Previsão de chuva forte para as próximas 48h</div>
+          <div class="bol-date">02/08/2026 · 18:00</div>
+        </div>
+        <div class="bol-row">
+          <span class="bol-tag tag-normal">NORMAL</span>
+          <div class="bol-title">Situação normalizada após chuvas de fim-de-semana</div>
+          <div class="bol-date">01/08/2026 · 09:15</div>
+        </div>
+      </div>
+
+      <div class="card stats-card">
+        <div class="stat-block">
+          <span class="stat-label" data-i18n="statChuva">Chuva acumulada 24h</span>
+          <span class="stat-val">38 <span>mm</span></span>
+        </div>
+        <div class="stat-block">
+          <span class="stat-label" data-i18n="statTemp">Temperatura</span>
+          <span class="stat-val">26 <span>°C</span></span>
+        </div>
+        <div class="stat-block">
+          <span class="stat-label" data-i18n="statHum">Humidade relativa</span>
+          <span class="stat-val">82 <span>%</span></span>
+        </div>
+        <div class="stat-block">
+          <span class="stat-label" data-i18n="statSensores">Sensores activos</span>
+          <span class="stat-val">2 <span>/ 3</span></span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <!-- /page-painel -->
+
+  <!-- ============ PAGE: GESTÃO DE UTILIZADORES ============ -->
+  <div class="page active" id="page-usuarios">
+    <div class="page-head">
+      <div>
+        <h1 data-i18n="pgUsuariosTitle">Gestão de Utilizadores</h1>
+        <div class="sub" data-i18n="pgUsuariosSub">Cadastre, edite e controle os perfis e permissões de Administradores, Técnicos e Voluntários.</div>
+      </div>
+      <button class="btn-clay-sm" onclick="openUserModal()"><i class="bi bi-person-plus"></i> <span data-i18n="btnNovoUsuario">Novo utilizador</span></button>
+    </div>
+
+    <div class="toolbar">
+      <div class="search-shell">
+        <i class="bi bi-search"></i>
+        <input type="text" data-i18n-ph="searchUsuarios" placeholder="Pesquisar por nome, utilizador ou e-mail…" id="userSearch" oninput="filterUsers()">
+      </div>
+      <div class="filter-chip active" data-role="todos" onclick="setRoleFilter(this)" data-i18n="filterTodos">Todos</div>
+      <div class="filter-chip" data-role="admin" onclick="setRoleFilter(this)" data-i18n="roleAdmin">Administrador</div>
+      <div class="filter-chip" data-role="tecnico" onclick="setRoleFilter(this)" data-i18n="roleTecnico">Técnico</div>
+      <div class="filter-chip" data-role="voluntario" onclick="setRoleFilter(this)" data-i18n="roleVoluntario">Voluntário</div>
+    </div>
+
+    <div class="table-card">
+      <table class="users-table">
+        <thead>
+          <tr>
+            <th data-i18n="thUtilizador">Utilizador</th>
+            <th data-i18n="thPerfil">Perfil</th>
+            <th data-i18n="thEstado">Estado</th>
+            <th data-i18n="thUltimaSessao">Última sessão</th>
+            <th style="text-align:right;" data-i18n="thAccoes">Acções</th>
+          </tr>
+        </thead>
+        <tbody id="usersTableBody">
+          <!-- gerado via JS a partir de MOCK_USERS -->
+        </tbody>
+      </table>
+      <div class="table-foot">
+        <span id="userCount">— utilizadores</span>
+        <span>Bairro Mubungo · Província do Bengo</span>
+      </div>
+    </div>
+  </div>
+  <!-- /page-usuarios -->
+
+  <!-- ============ PAGE 3: MONITORIZAÇÃO DOS SENSORES ============ -->
+  <div class="page" id="page-sensores-mon">
+    <div class="page-head">
+      <div>
+        <h1 data-i18n="pgSensoresMonTitle">Monitorização dos Sensores</h1>
+        <div class="sub" data-i18n="pgSensoresMonSub">Leituras em tempo real do sensor ultrassônico (nível da água) e do sensor de chuva, para identificar riscos de inundação.</div>
+      </div>
+      <span class="role-badge role-safe"><i class="bi bi-broadcast"></i> <span data-i18n="sensoresTransmitindo">2 de 3 sensores a transmitir</span></span>
+    </div>
+
+    <div class="grid">
+      <div class="card" style="grid-column:span 6;">
+        <h3><i class="bi bi-water"></i><span data-i18n="sensorUltraTitle">Sensor Ultrassônico — Nível da Água</span></h3>
+        <div style="display:flex;align-items:baseline;gap:8px;">
+          <div class="live-number" id="smUltra">2,15<span>m</span></div>
+        </div>
+        <div class="live-sub">Ponte de Mubungo · Arduino Uno · a cada 30s</div>
+        <div class="feed-list" id="feedUltra"></div>
+      </div>
+      <div class="card" style="grid-column:span 6;">
+        <h3><i class="bi bi-cloud-rain"></i><span data-i18n="sensorChuvaTitle">Sensor de Chuva — Intensidade</span></h3>
+        <div style="display:flex;align-items:baseline;gap:8px;">
+          <div class="live-number" id="smChuva">4,2<span>mm/h</span></div>
+        </div>
+        <div class="live-sub">Escola Primária do Mubungo · ESP32 · a cada 60s</div>
+        <div class="feed-list" id="feedChuva"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ PAGE 4: MONITORIZAÇÃO EM TEMPO REAL ============ -->
+  <div class="page" id="page-tempo-real">
+    <div class="page-head">
+      <div>
+        <h1 data-i18n="pgTempoRealTitle">Monitorização em Tempo Real</h1>
+        <div class="sub" data-i18n="pgTempoRealSub">Painel contínuo com os dados recolhidos pelos sensores, actualizados automaticamente.</div>
+      </div>
+    </div>
+
+    <div class="live-grid">
+      <div class="live-card">
+        <div class="lc-top"><h3><i class="bi bi-water"></i> <span data-i18n="gaugeTitle">Nível do Rio Bengo</span></h3><span class="pulse-dot"></span></div>
+        <div class="live-number" id="rtUltra">2,15<span>m</span></div>
+        <div class="live-sub" id="rtUltraTime">última leitura: agora mesmo</div>
+      </div>
+      <div class="live-card">
+        <div class="lc-top"><h3><i class="bi bi-cloud-rain"></i> <span data-i18n="statChuva">Chuva acumulada 24h</span></h3><span class="pulse-dot"></span></div>
+        <div class="live-number" id="rtChuva">38<span>mm</span></div>
+        <div class="live-sub" id="rtChuvaTime">última leitura: agora mesmo</div>
+      </div>
+      <div class="live-card" style="grid-column:span 12;">
+        <h3><i class="bi bi-list-columns"></i> <span data-i18n="registoAoVivo">Registo ao vivo</span></h3>
+        <div class="feed-list" id="feedRealtime" style="max-height:220px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ PAGE 5: GESTÃO DE BOLETINS ============ -->
+  <div class="page" id="page-boletins">
+    <div class="page-head">
+      <div>
+        <h1 data-i18n="pgBoletinsTitle">Gestão de Boletins</h1>
+        <div class="sub" data-i18n="pgBoletinsSub">Registe, edite, pesquise e envie boletins técnicos sobre condições climáticas e hidrológicas.</div>
+      </div>
+      <button class="btn-clay-sm" onclick="openBoletimModal()"><i class="bi bi-file-earmark-plus"></i> <span data-i18n="btnNovoBoletim">Novo boletim</span></button>
+    </div>
+    <div class="toolbar">
+      <div class="search-shell"><i class="bi bi-search"></i><input type="text" id="boletimSearch" oninput="renderBoletins()" data-i18n-ph="searchBoletins" placeholder="Pesquisar boletins…"></div>
+      <div class="filter-chip active" data-sev="todos" onclick="setBoletimFilter(this)" data-i18n="filterTodos">Todos</div>
+      <div class="filter-chip" data-sev="atencao" onclick="setBoletimFilter(this)" data-i18n="sevAtencao">Atenção</div>
+      <div class="filter-chip" data-sev="info" onclick="setBoletimFilter(this)" data-i18n="sevInfo">Informativo</div>
+      <div class="filter-chip" data-sev="normal" onclick="setBoletimFilter(this)" data-i18n="sevNormal">Normal</div>
+    </div>
+    <div class="table-card">
+      <table class="users-table">
+        <thead><tr><th data-i18n="thBoletim">Boletim</th><th data-i18n="thSeveridade">Severidade</th><th data-i18n="thData">Data</th><th style="text-align:right;" data-i18n="thAccoes">Acções</th></tr></thead>
+        <tbody id="boletinsTableBody"></tbody>
+      </table>
+      <div class="table-foot"><span id="boletimCount">—</span><span>Bairro Mubungo · Província do Bengo</span></div>
+    </div>
+  </div>
+
+  <!-- ============ PAGE 6: GESTÃO DE LAUDOS TÉCNICOS ============ -->
+  <div class="page" id="page-laudos">
+    <div class="page-head">
+      <div>
+        <h1 data-i18n="pgLaudosTitle">Gestão de Laudos Técnicos</h1>
+        <div class="sub" data-i18n="pgLaudosSub">Elabore, actualize, consulte e envie laudos técnicos sobre ocorrências de inundações.</div>
+      </div>
+      <button class="btn-clay-sm" onclick="openLaudoModal()"><i class="bi bi-clipboard-plus"></i> <span data-i18n="btnNovoLaudo">Novo laudo</span></button>
+    </div>
+    <div class="toolbar">
+      <div class="search-shell"><i class="bi bi-search"></i><input type="text" id="laudoSearch" oninput="renderLaudos()" data-i18n-ph="searchLaudos" placeholder="Pesquisar laudos por ocorrência ou técnico…"></div>
+    </div>
+    <div class="table-card">
+      <table class="users-table">
+        <thead><tr><th data-i18n="thLaudo">Laudo</th><th data-i18n="thOcorrencia">Ocorrência</th><th data-i18n="thTecnico">Técnico</th><th data-i18n="thEstado">Estado</th><th style="text-align:right;" data-i18n="thAccoes">Acções</th></tr></thead>
+        <tbody id="laudosTableBody"></tbody>
+      </table>
+      <div class="table-foot"><span id="laudoCount">—</span><span>Bairro Mubungo · Província do Bengo</span></div>
+    </div>
+  </div>
+
+  <!-- /pages 3-6 -->
+
+  <!-- ============ PAGE 7: MENSAGENS / SUPORTE ============ -->
+  <div class="page" id="page-mensagens">
+    <div class="page-head">
+      <div>
+        <h1 data-i18n="pgMensagensTitle">Gestão de Mensagens / Suporte</h1>
+        <div class="sub" data-i18n="pgMensagensSub">Crie, edite, pesquise e envie mensagens informativas para os utilizadores do sistema.</div>
+      </div>
+      <button class="btn-clay-sm" onclick="openMsgModal()"><i class="bi bi-send"></i> <span data-i18n="btnNovaMensagem">Nova mensagem</span></button>
+    </div>
+    <div class="toolbar">
+      <div class="search-shell"><i class="bi bi-search"></i><input type="text" id="msgSearch" oninput="renderMensagens()" data-i18n-ph="searchMensagens" placeholder="Pesquisar por assunto ou destinatário…"></div>
+    </div>
+    <div class="table-card">
+      <table class="users-table">
+        <thead><tr><th data-i18n="thAssunto">Assunto</th><th data-i18n="thDestinatario">Destinatário</th><th data-i18n="thEstado">Estado</th><th data-i18n="thEnviada">Enviada</th><th style="text-align:right;" data-i18n="thAccoes">Acções</th></tr></thead>
+        <tbody id="msgTableBody"></tbody>
+      </table>
+      <div class="table-foot"><span id="msgCount">—</span><span>Bairro Mubungo · Província do Bengo</span></div>
+    </div>
+  </div>
+
+  <!-- ============ PAGE 8: EMISSÃO AUTOMÁTICA DE ALERTAS ============ -->
+  <div class="page" id="page-auto-alertas">
+    <div class="page-head">
+      <div>
+        <h1 data-i18n="pgAutoAlertasTitle">Emissão Automática de Alertas</h1>
+        <div class="sub" data-i18n="pgAutoAlertasSub">Defina os limites de nível de água e intensidade de chuva que despoletam alertas automáticos.</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span style="font-size:.82rem;color:var(--ink-soft);" data-i18n="emissaoAutomatica">Emissão automática</span>
+        <label class="toggle-switch"><input type="checkbox" id="autoAlertToggle" checked><span class="toggle-slider"></span></label>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:18px;">
+      <h3><i class="bi bi-sliders"></i>Limites — Nível do Rio Bengo (metros)</h3>
+      <div class="threshold-row">
+        <div class="th-label"><b>Atenção</b><span>emite alerta informativo</span></div>
+        <input type="range" min="0.5" max="3.5" step="0.05" value="1.2" oninput="document.getElementById('thAtencaoVal').textContent=this.value+' m'">
+        <div class="th-val" id="thAtencaoVal">1.2 m</div>
+      </div>
+      <div class="threshold-row">
+        <div class="th-label"><b>Alerta</b><span>emite alerta laranja</span></div>
+        <input type="range" min="0.5" max="3.5" step="0.05" value="2.0" oninput="document.getElementById('thAlertaVal').textContent=this.value+' m'">
+        <div class="th-val" id="thAlertaVal">2.0 m</div>
+      </div>
+      <div class="threshold-row">
+        <div class="th-label"><b>Emergência</b><span>emite alerta crítico + SMS</span></div>
+        <input type="range" min="0.5" max="3.5" step="0.05" value="2.8" oninput="document.getElementById('thEmergVal').textContent=this.value+' m'">
+        <div class="th-val" id="thEmergVal">2.8 m</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:18px;">
+      <h3><i class="bi bi-cloud-rain"></i>Limite — Intensidade de chuva (mm/h)</h3>
+      <div class="threshold-row">
+        <div class="th-label"><b>Chuva forte</b><span>emite aviso à Protecção Civil</span></div>
+        <input type="range" min="5" max="60" step="1" value="25" oninput="document.getElementById('thChuvaVal').textContent=this.value+' mm/h'">
+        <div class="th-val" id="thChuvaVal">25 mm/h</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><i class="bi bi-clock-history"></i>Alertas emitidos automaticamente</h3>
+      <div class="table-card" style="border:0;">
+        <table class="users-table">
+          <thead><tr><th>Alerta</th><th>Motivo</th><th>Canal</th><th>Data</th></tr></thead>
+          <tbody>
+            <tr><td><span class="role-badge role-warn">ATENÇÃO</span></td><td>Nível do rio atingiu 1,20 m</td><td>App + Rádio comunitária</td><td class="u-email">03/08/2026 · 07:40</td></tr>
+            <tr><td><span class="role-badge role-danger">EMERGÊNCIA</span></td><td>Chuva de 41 mm/h detectada</td><td>App + SMS + Rádio</td><td class="u-email">14/03/2026 · 22:05</td></tr>
+            <tr><td><span class="role-badge role-safe">NORMAL</span></td><td>Nível do rio normalizado (0,95 m)</td><td>App</td><td class="u-email">01/08/2026 · 09:15</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ PAGE 9: GESTÃO DOS SENSORES ============ -->
+  <div class="page" id="page-gestao-sensores">
+    <div class="page-head">
+      <div>
+        <h1 data-i18n="pgGestaoSensoresTitle">Gestão dos Sensores</h1>
+        <div class="sub" data-i18n="pgGestaoSensoresSub">Acompanhe o estado dos sensores instalados no Bairro Mubungo e verifique o seu funcionamento.</div>
+      </div>
+      <button class="btn-clay-sm" onclick="openSensorModal()"><i class="bi bi-plus-circle"></i> <span data-i18n="btnNovoSensor">Novo sensor</span></button>
+    </div>
+    <div class="table-card">
+      <table class="users-table">
+        <thead><tr><th data-i18n="thSensor">Sensor</th><th data-i18n="thTipo">Tipo</th><th data-i18n="thLocalizacao">Localização</th><th data-i18n="thEstado">Estado</th><th data-i18n="thBateria">Bateria</th><th style="text-align:right;" data-i18n="thAccoes">Acções</th></tr></thead>
+        <tbody id="sensorsTableBody"></tbody>
+      </table>
+      <div class="table-foot"><span id="sensorCount">—</span><span>Bairro Mubungo · Província do Bengo</span></div>
+    </div>
+  </div>
+
+  <!-- ============ PAGE 11: HISTÓRICO DE OCORRÊNCIAS ============ -->
+  <div class="page" id="page-historico">
+    <div class="page-head">
+      <div>
+        <h1 data-i18n="pgHistoricoTitle">Histórico de Ocorrências</h1>
+        <div class="sub" data-i18n="pgHistoricoSub">Registos de eventos, alertas emitidos, boletins e laudos para consulta futura.</div>
+      </div>
+    </div>
+    <div class="toolbar">
+      <div class="filter-chip active" data-tipo="todos" onclick="setHistFilter(this)" data-i18n="filterTodos">Todos</div>
+      <div class="filter-chip" data-tipo="alerta" onclick="setHistFilter(this)" data-i18n="histAlertas">Alertas</div>
+      <div class="filter-chip" data-tipo="boletim" onclick="setHistFilter(this)" data-i18n="histBoletins">Boletins</div>
+      <div class="filter-chip" data-tipo="laudo" onclick="setHistFilter(this)" data-i18n="histLaudos">Laudos</div>
+    </div>
+    <div class="card">
+      <div class="timeline" id="historicoTimeline"></div>
+    </div>
+  </div>
+
+  <!-- /pages 7-11 -->
+</div>
+
+<!-- ============ MODAL: NOVO / EDITAR UTILIZADOR ============ -->
+<div class="modal-veil" id="userModal">
+  <div class="modal-box">
+    <h3 id="userModalTitle">Novo utilizador</h3>
+    <div class="sub">Defina os dados de acesso e o perfil de permissões.</div>
+    <form id="userForm">
+      <div class="field">
+        <label>Nome completo</label>
+        <div class="input-shell"><i class="bi bi-person"></i><input type="text" id="f-nome" placeholder="ex: Ngola Fernandes" required></div>
+      </div>
+      <div class="field">
+        <label>Utilizador / e-mail</label>
+        <div class="input-shell"><i class="bi bi-at"></i><input type="text" id="f-email" placeholder="ex: ngola.fernandes" required></div>
+      </div>
+      <div class="field">
+        <label>Perfil de acesso</label>
+        <select id="f-perfil">
+          <option value="admin">Administrador</option>
+          <option value="tecnico">Técnico</option>
+          <option value="voluntario">Voluntário</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Estado</label>
+        <select id="f-estado">
+          <option value="ativo">Activo</option>
+          <option value="inativo">Inactivo</option>
+        </select>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-ghost" onclick="closeUserModal()">Cancelar</button>
+        <button type="submit" class="btn-clay">Guardar utilizador</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ MODAL: CONFIRMAR REMOÇÃO ============ -->
+<div class="modal-veil" id="confirmModal">
+  <div class="modal-box" style="max-width:380px;">
+    <h3><i class="bi bi-exclamation-triangle" style="color:var(--danger);"></i> Remover utilizador</h3>
+    <div class="sub">Esta acção não pode ser desfeita. O utilizador perderá o acesso ao sistema imediatamente.</div>
+    <div class="modal-actions">
+      <button class="btn-ghost" onclick="closeConfirmModal()">Cancelar</button>
+      <button class="btn-clay-sm" style="flex:1;justify-content:center;background:var(--danger);" onclick="confirmDeleteUser()">Remover</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL: NOVO / EDITAR BOLETIM ============ -->
+<div class="modal-veil" id="boletimModal">
+  <div class="modal-box">
+    <h3 id="boletimModalTitle">Novo boletim</h3>
+    <div class="sub">Boletim técnico sobre condições climáticas e hidrológicas.</div>
+    <form id="boletimForm">
+      <div class="field"><label>Título</label><div class="input-shell"><i class="bi bi-file-earmark-text"></i><input type="text" id="bo-titulo" placeholder="ex: Subida do nível do Rio Bengo" required></div></div>
+      <div class="field"><label>Severidade</label>
+        <select id="bo-severidade"><option value="atencao">Atenção</option><option value="info">Informativo</option><option value="normal">Normal</option></select>
+      </div>
+      <div class="field"><label>Conteúdo</label><textarea class="msg-input" id="bo-conteudo" placeholder="Descreva a situação observada…" required></textarea></div>
+      <div class="modal-actions">
+        <button type="button" class="btn-ghost" onclick="closeBoletimModal()">Cancelar</button>
+        <button type="submit" class="btn-clay">Guardar boletim</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ MODAL: NOVO / EDITAR LAUDO ============ -->
+<div class="modal-veil" id="laudoModal">
+  <div class="modal-box">
+    <h3 id="laudoModalTitle">Novo laudo técnico</h3>
+    <div class="sub">Laudo sobre uma ocorrência de inundação.</div>
+    <form id="laudoForm">
+      <div class="field"><label>Ocorrência associada</label><div class="input-shell"><i class="bi bi-geo-alt"></i><input type="text" id="la-ocorrencia" placeholder="ex: Cheia — Ponte de Mubungo" required></div></div>
+      <div class="field"><label>Técnico responsável</label><div class="input-shell"><i class="bi bi-person"></i><input type="text" id="la-tecnico" placeholder="ex: Kiluanji Mendes" required></div></div>
+      <div class="field"><label>Estado</label>
+        <select id="la-estado"><option value="rascunho">Rascunho</option><option value="concluido">Concluído</option><option value="enviado">Enviado</option></select>
+      </div>
+      <div class="field"><label>Observações</label><textarea class="msg-input" id="la-obs" placeholder="Conclusões técnicas da vistoria…"></textarea></div>
+      <div class="modal-actions">
+        <button type="button" class="btn-ghost" onclick="closeLaudoModal()">Cancelar</button>
+        <button type="submit" class="btn-clay">Guardar laudo</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ MODAL: NOVA MENSAGEM ============ -->
+<div class="modal-veil" id="msgModal">
+  <div class="modal-box">
+    <h3>Nova mensagem</h3>
+    <div class="sub">Envie uma mensagem informativa aos utilizadores do sistema.</div>
+    <form id="msgForm">
+      <div class="field"><label>Destinatário</label>
+        <select id="ms-dest"><option>Todos os utilizadores</option><option>Administradores</option><option>Técnicos</option><option>Voluntários</option></select>
+      </div>
+      <div class="field"><label>Assunto</label><div class="input-shell"><i class="bi bi-chat-left-text"></i><input type="text" id="ms-assunto" placeholder="ex: Reunião de coordenação" required></div></div>
+      <div class="field"><label>Mensagem</label><textarea class="msg-input" id="ms-corpo" placeholder="Escreva a mensagem…" required></textarea></div>
+      <div class="modal-actions">
+        <button type="button" class="btn-ghost" onclick="closeMsgModal()">Cancelar</button>
+        <button type="submit" class="btn-clay">Enviar mensagem</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ MODAL: NOVO / EDITAR SENSOR ============ -->
+<div class="modal-veil" id="sensorModal">
+  <div class="modal-box">
+    <h3 id="sensorModalTitle">Novo sensor</h3>
+    <div class="sub">Dados de identificação e localização do dispositivo.</div>
+    <form id="sensorForm">
+      <div class="field"><label>Nome do sensor</label><div class="input-shell"><i class="bi bi-broadcast"></i><input type="text" id="se-nome" placeholder="ex: Régua Fluviométrica — Cais Velho" required></div></div>
+      <div class="field"><label>Tipo de dispositivo</label>
+        <select id="se-tipo"><option value="Arduino Uno">Arduino Uno (nível de água)</option><option value="ESP32">ESP32 (chuva / WiFi)</option></select>
+      </div>
+      <div class="field"><label>Localização</label><div class="input-shell"><i class="bi bi-geo-alt"></i><input type="text" id="se-local" placeholder="ex: Bairro Mubungo" required></div></div>
+      <div class="field"><label>Estado</label>
+        <select id="se-estado"><option value="online">Online</option><option value="offline">Offline</option><option value="manutencao">Em manutenção</option></select>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-ghost" onclick="closeSensorModal()">Cancelar</button>
+        <button type="submit" class="btn-clay">Guardar sensor</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ MODAL: CRIAR CONTA ============ -->
+<div class="modal-veil" id="registerModal">
+  <div class="modal-box">
+    <h3 data-i18n="regTitle">Criar nova conta</h3>
+    <div class="sub" data-i18n="regSub">Peça acesso ao sistema AlertaBengo. Um administrador poderá rever o seu perfil.</div>
+    <form id="registerForm">
+      <div class="field"><label data-i18n="regName">Nome completo</label><div class="input-shell"><i class="bi bi-person"></i><input type="text" id="reg-nome" placeholder="ex: Bernardo Kizua" required></div></div>
+      <div class="field"><label data-i18n="regUser">Utilizador</label><div class="input-shell"><i class="bi bi-at"></i><input type="text" id="reg-user" placeholder="ex: voluntario.mubungo3" required></div></div>
+      <div class="field"><label data-i18n="regEmail">E-mail</label><div class="input-shell"><i class="bi bi-envelope"></i><input type="email" id="reg-email" placeholder="ex: nome@exemplo.co.ao" required></div></div>
+      <div class="field"><label data-i18n="regProfile">Perfil pretendido</label>
+        <select id="reg-perfil">
+          <option value="voluntario" data-i18n="roleVoluntario">Voluntário</option>
+          <option value="tecnico" data-i18n="roleTecnico">Técnico</option>
+        </select>
+      </div>
+      <div class="field"><label data-i18n="regPass">Senha</label><div class="input-shell"><i class="bi bi-lock"></i><input type="password" id="reg-pass" placeholder="••••••••" required minlength="6"></div></div>
+      <div class="field"><label data-i18n="regPass2">Confirmar senha</label><div class="input-shell"><i class="bi bi-lock"></i><input type="password" id="reg-pass2" placeholder="••••••••" required minlength="6"></div></div>
+      <div id="regError" class="hidden" style="color:var(--danger);font-size:.8rem;margin:-4px 0 12px;"></div>
+      <div class="modal-actions">
+        <button type="button" class="btn-ghost" onclick="closeRegisterModal()" data-i18n="cancel">Cancelar</button>
+        <button type="submit" class="btn-clay" data-i18n="regSubmit">Criar conta</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ MODAL: RECUPERAR SENHA ============ -->
+<div class="modal-veil" id="forgotModal">
+  <div class="modal-box">
+    <div id="forgotStep1">
+      <h3 data-i18n="fpTitle">Recuperar acesso</h3>
+      <div class="sub" data-i18n="fpSub1">Indique o seu utilizador ou e-mail. Enviaremos um código de verificação.</div>
+      <div class="field"><label data-i18n="labelUser">Utilizador ou e-mail</label><div class="input-shell"><i class="bi bi-person"></i><input type="text" id="fp-user" placeholder="ex: tecnico.mubungo" required></div></div>
+      <div class="modal-actions">
+        <button type="button" class="btn-ghost" onclick="closeForgotModal()" data-i18n="cancel">Cancelar</button>
+        <button type="button" class="btn-clay" onclick="sendRecoveryCode()" data-i18n="fpSend">Enviar código</button>
+      </div>
+    </div>
+    <div id="forgotStep2" class="hidden">
+      <h3 data-i18n="fpTitle2">Definir nova senha</h3>
+      <div class="sub" data-i18n="fpSub2">Enviámos um código de 6 dígitos para o contacto associado a esta conta.</div>
+      <div class="field"><label data-i18n="fpCode">Código de verificação</label><div class="input-shell"><i class="bi bi-shield-check"></i><input type="text" id="fp-code" placeholder="000000" maxlength="6" required></div></div>
+      <div class="field"><label data-i18n="fpNewPass">Nova senha</label><div class="input-shell"><i class="bi bi-lock"></i><input type="password" id="fp-pass" placeholder="••••••••" required minlength="6"></div></div>
+      <div class="field"><label data-i18n="regPass2">Confirmar senha</label><div class="input-shell"><i class="bi bi-lock"></i><input type="password" id="fp-pass2" placeholder="••••••••" required minlength="6"></div></div>
+      <div id="fpError" class="hidden" style="color:var(--danger);font-size:.8rem;margin:-4px 0 12px;"></div>
+      <div class="modal-actions">
+        <button type="button" class="btn-ghost" onclick="closeForgotModal()" data-i18n="cancel">Cancelar</button>
+        <button type="button" class="btn-clay" onclick="confirmResetPassword()" data-i18n="fpReset">Redefinir senha</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SCREEN 12: CONSULTA PÚBLICA DE ALERTAS ============ -->
+<div id="screen-public" class="screen">
+  <div class="public-hero">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+      <div class="pb-back" onclick="closePublicPage()"><i class="bi bi-arrow-left"></i> <span data-i18n="backToLogin">Voltar ao início de sessão</span></div>
+      <div class="lang-toggle" id="langTogglePublic">
+        <div class="lang-chip active" data-lang="pt">PT</div>
+        <div class="lang-chip" data-lang="kmb">Kimbundu</div>
+      </div>
+    </div>
+    <h1 data-i18n="publicTitle">Alertas do Bairro Mubungo</h1>
+    <div class="ph-level"><i class="bi bi-exclamation-triangle"></i> <span data-i18n="publicLevel">Nível de alerta actual: ATENÇÃO</span></div>
+  </div>
+  <div class="public-body">
+    <div class="pb-card">
+      <h3><i class="bi bi-megaphone" style="color:var(--water-deep);"></i> Alerta activo</h3>
+      <p style="font-size:.92rem;color:var(--ink);">O Rio Bengo subiu 34 cm nas últimas 6 horas junto à Ponte de Mubungo. A população residente junto às margens deve manter-se atenta e evitar atravessar zonas de água corrente.</p>
+      <div class="u-email">Emitido em 03/08/2026 · 07:40 — Protecção Civil do Bengo</div>
+    </div>
+    <div class="pb-card">
+      <h3><i class="bi bi-shield-check" style="color:var(--safe);"></i> Recomendações de segurança</h3>
+      <div class="pb-rec"><i class="bi bi-check-circle"></i> Evite atravessar pontes ou zonas alagadas, mesmo que a água pareça baixa.</div>
+      <div class="pb-rec"><i class="bi bi-check-circle"></i> Mantenha-se informado através da rádio comunitária e do aplicativo AlertaBengo.</div>
+      <div class="pb-rec"><i class="bi bi-check-circle"></i> Em caso de subida súbita do nível da água, dirija-se para zonas altas identificadas pela Protecção Civil.</div>
+      <div class="pb-rec"><i class="bi bi-check-circle"></i> Guarde o contacto de emergência da Protecção Civil do Bengo.</div>
+    </div>
+    <div class="pb-card">
+      <h3><i class="bi bi-clock-history" style="color:var(--ink-soft);"></i> Alertas anteriores</h3>
+      <div class="bol-row"><span class="bol-tag tag-info">INFORMATIVO</span><div class="bol-title">Previsão de chuva forte para as próximas 48h</div><div class="bol-date">02/08/2026 · 18:00</div></div>
+      <div class="bol-row"><span class="bol-tag tag-normal">NORMAL</span><div class="bol-title">Situação normalizada após chuvas de fim-de-semana</div><div class="bol-date">01/08/2026 · 09:15</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+<script>
+// ---------- login <-> dashboard ----------
+function showDashboard(){
+  document.getElementById('screen-login').classList.add('hidden');
+  document.getElementById('screen-dashboard').classList.remove('hidden');
+  renderUsers();
+  renderBoletins();
+  renderLaudos();
+  renderMensagens();
+  renderSensorsGestao();
+  renderHistorico();
+  startLiveFeeds();
+}
+function showLogin(){
+  document.getElementById('screen-dashboard').classList.add('hidden');
+  document.getElementById('screen-login').classList.remove('hidden');
+}
+document.getElementById('loginForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  showDashboard();
+});
+document.getElementById('toggleEye').addEventListener('click', function(){
+  const p = document.getElementById('passInput');
+  if(p.type === 'password'){ p.type='text'; this.classList.replace('bi-eye','bi-eye-slash'); }
+  else{ p.type='password'; this.classList.replace('bi-eye-slash','bi-eye'); }
+});
+
+// ---------- criar conta ----------
+function openRegisterModal(){
+  document.getElementById('registerForm').reset();
+  document.getElementById('regError').classList.add('hidden');
+  document.getElementById('registerModal').classList.add('show');
+}
+function closeRegisterModal(){ document.getElementById('registerModal').classList.remove('show'); }
+document.getElementById('registerForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  const nome = document.getElementById('reg-nome').value.trim();
+  const user = document.getElementById('reg-user').value.trim();
+  const email = document.getElementById('reg-email').value.trim();
+  const perfil = document.getElementById('reg-perfil').value;
+  const pass = document.getElementById('reg-pass').value;
+  const pass2 = document.getElementById('reg-pass2').value;
+  const errEl = document.getElementById('regError');
+  if(pass !== pass2 || pass.length < 6){
+    errEl.textContent = t('regErrMismatch'); errEl.classList.remove('hidden'); return;
+  }
+  if(MOCK_USERS.some(u=>u.email.toLowerCase() === user.toLowerCase())){
+    errEl.textContent = t('regErrExists'); errEl.classList.remove('hidden'); return;
+  }
+  errEl.classList.add('hidden');
+  MOCK_USERS.push({id:Date.now(), nome, email:user, perfil, estado:'ativo', ultima:DEFAULT_ULTIMA});
+  closeRegisterModal();
+  const loginUserInput = document.querySelector('#loginForm input[type="text"]');
+  if(loginUserInput) loginUserInput.value = user;
+  document.getElementById('passInput').value = pass;
+  if(document.getElementById('usersTableBody')) renderUsers();
+  toastSend(t('regSuccess'));
+});
+
+// ---------- esqueci a senha / recuperar ----------
+let fpGeneratedCode = null;
+function openForgotModal(){
+  document.getElementById('forgotStep1').classList.remove('hidden');
+  document.getElementById('forgotStep2').classList.add('hidden');
+  document.getElementById('fpError').classList.add('hidden');
+  const loginUserInput = document.querySelector('#loginForm input[type="text"]');
+  document.getElementById('fp-user').value = loginUserInput ? loginUserInput.value : '';
+  document.getElementById('forgotModal').classList.add('show');
+}
+function closeForgotModal(){ document.getElementById('forgotModal').classList.remove('show'); }
+function sendRecoveryCode(){
+  const user = document.getElementById('fp-user').value.trim();
+  if(!user) return;
+  fpGeneratedCode = String(Math.floor(100000 + Math.random()*900000));
+  document.getElementById('forgotStep1').classList.add('hidden');
+  document.getElementById('forgotStep2').classList.remove('hidden');
+  toastSend(t('fpCodeSentToast') + ' ' + fpGeneratedCode);
+}
+function confirmResetPassword(){
+  const code = document.getElementById('fp-code').value.trim();
+  const pass = document.getElementById('fp-pass').value;
+  const pass2 = document.getElementById('fp-pass2').value;
+  const errEl = document.getElementById('fpError');
+  if(!fpGeneratedCode || code !== fpGeneratedCode){
+    errEl.textContent = t('fpErrCode'); errEl.classList.remove('hidden'); return;
+  }
+  if(pass !== pass2 || pass.length < 6){
+    errEl.textContent = t('fpErrPass'); errEl.classList.remove('hidden'); return;
+  }
+  errEl.classList.add('hidden');
+  closeForgotModal();
+  document.getElementById('passInput').value = pass;
+  fpGeneratedCode = null;
+  toastSend(t('fpSuccess'));
+}
+
+// ---------- page switching (sidebar) ----------
+function showPage(pageId, navEl){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(pageId).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  if(navEl) navEl.classList.add('active');
+  if(pageId === 'page-painel'){
+    setTimeout(initMap,80);
+    setTimeout(initChart,80);
+  }
+}
+
+// ---------- sidebar "em breve" toast ----------
+function soon(){
+  const c = document.getElementById('toast-container');
+  const t = document.createElement('div');
+  t.className = 'toast-msg';
+  t.innerHTML = '<i class="bi bi-hourglass-split"></i> Este módulo entra no protótipo na próxima fase';
+  c.appendChild(t);
+  requestAnimationFrame(()=>t.classList.add('show'));
+  setTimeout(()=>{ t.classList.remove('show'); setTimeout(()=>t.remove(),300); }, 2600);
+}
+
+// ============ MÓDULO 2 — GESTÃO DE UTILIZADORES ============
+let MOCK_USERS = [
+  {id:1, nome:'Kiluanji Mendes', email:'tecnico.mubungo', perfil:'tecnico', estado:'ativo', ultima:'Agora mesmo'},
+  {id:2, nome:'Adelaide Sacramento', email:'admin.bengo', perfil:'admin', estado:'ativo', ultima:'Hoje, 07:52'},
+  {id:3, nome:'Bernardo Kizua', email:'voluntario.mubungo1', perfil:'voluntario', estado:'ativo', ultima:'Ontem, 19:10'},
+  {id:4, nome:'Isabel Cassinda', email:'voluntario.mubungo2', perfil:'voluntario', estado:'inativo', ultima:'12/07/2026'},
+  {id:5, nome:'Manuel Bumba', email:'tecnico.caxito', perfil:'tecnico', estado:'ativo', ultima:'Hoje, 06:20'},
+];
+let roleFilter = 'todos';
+let editingUserId = null;
+
+function roleLabel_(perfil){ return t('role'+perfil.charAt(0).toUpperCase()+perfil.slice(1)); }
+const roleLabel = new Proxy({}, {get:(_,perfil)=>roleLabel_(perfil)});
+const roleClass = {admin:'role-admin', tecnico:'role-tecnico', voluntario:'role-voluntario'};
+const avatarColor = {admin:'#C1382A', tecnico:'#1B5A70', voluntario:'#316A45'};
+
+function initials(nome){
+  return nome.trim().split(/\s+/).slice(0,2).map(w=>w[0]).join('').toUpperCase();
+}
+
+function renderUsers(){
+  const term = (document.getElementById('userSearch')?.value || '').toLowerCase();
+  const body = document.getElementById('usersTableBody');
+  const filtered = MOCK_USERS.filter(u=>{
+    const matchesRole = roleFilter === 'todos' || u.perfil === roleFilter;
+    const matchesTerm = u.nome.toLowerCase().includes(term) || u.email.toLowerCase().includes(term);
+    return matchesRole && matchesTerm;
+  });
+  body.innerHTML = filtered.map(u => `
+    <tr>
+      <td>
+        <div class="u-person">
+          <div class="u-avatar" style="background:${avatarColor[u.perfil]}">${initials(u.nome)}</div>
+          <div>
+            <div class="u-name">${u.nome}</div>
+            <div class="u-email">${u.email}</div>
+          </div>
+        </div>
+      </td>
+      <td><span class="role-badge ${roleClass[u.perfil]}">${roleLabel[u.perfil]}</span></td>
+      <td><span class="status-dot ${u.estado==='inativo'?'inactive':''}">${u.estado==='ativo'?t('statusActivo'):t('statusInactivo')}</span></td>
+      <td style="font-family:var(--font-mono);font-size:.8rem;color:var(--ink-soft);">${u.ultima===DEFAULT_ULTIMA?t('nuncaAcedeu'):u.ultima}</td>
+      <td>
+        <div class="row-actions">
+          <div class="icon-action" title="Editar" onclick="openUserModal(${u.id})"><i class="bi bi-pencil"></i></div>
+          <div class="icon-action danger" title="Remover" onclick="openConfirmModal(${u.id})"><i class="bi bi-trash"></i></div>
+        </div>
+      </td>
+    </tr>
+  `).join('') || `<tr><td colspan="5" style="text-align:center;color:var(--ink-soft);padding:32px;">${t('emptyUsers')}</td></tr>`;
+  document.getElementById('userCount').textContent = `${filtered.length} ${t('de')} ${MOCK_USERS.length} ${t('unitUtilizadores')}`;
+}
+function filterUsers(){ renderUsers(); }
+function setRoleFilter(chip){
+  document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));
+  chip.classList.add('active');
+  roleFilter = chip.dataset.role;
+  renderUsers();
+}
+
+function openUserModal(id){
+  editingUserId = id || null;
+  const modal = document.getElementById('userModal');
+  if(id){
+    const u = MOCK_USERS.find(x=>x.id===id);
+    document.getElementById('userModalTitle').textContent = 'Editar utilizador';
+    document.getElementById('f-nome').value = u.nome;
+    document.getElementById('f-email').value = u.email;
+    document.getElementById('f-perfil').value = u.perfil;
+    document.getElementById('f-estado').value = u.estado;
+  }else{
+    document.getElementById('userModalTitle').textContent = 'Novo utilizador';
+    document.getElementById('userForm').reset();
+  }
+  modal.classList.add('show');
+}
+function closeUserModal(){ document.getElementById('userModal').classList.remove('show'); }
+
+document.getElementById('userForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  const nome = document.getElementById('f-nome').value.trim();
+  const email = document.getElementById('f-email').value.trim();
+  const perfil = document.getElementById('f-perfil').value;
+  const estado = document.getElementById('f-estado').value;
+  if(editingUserId){
+    const u = MOCK_USERS.find(x=>x.id===editingUserId);
+    Object.assign(u, {nome, email, perfil, estado});
+  }else{
+    MOCK_USERS.push({id:Date.now(), nome, email, perfil, estado, ultima:DEFAULT_ULTIMA});
+  }
+  closeUserModal();
+  renderUsers();
+});
+
+let userToDelete = null;
+function openConfirmModal(id){ userToDelete = id; document.getElementById('confirmModal').classList.add('show'); }
+function closeConfirmModal(){ userToDelete = null; document.getElementById('confirmModal').classList.remove('show'); }
+function confirmDeleteUser(){
+  MOCK_USERS = MOCK_USERS.filter(u=>u.id !== userToDelete);
+  closeConfirmModal();
+  renderUsers();
+}
+
+// ---------- map ----------
+let mapInited = false;
+function initMap(){
+  if(mapInited) return;
+  mapInited = true;
+  const map = L.map('leafletMap', {zoomControl:true, attributionControl:false}).setView([-8.84, 13.67], 14);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+  const online = L.divIcon({className:'', html:'<div style="width:20px;height:20px;border-radius:50%;background:#4C9A6A;border:3px solid white;box-shadow:0 0 0 3px #4C9A6A66;"></div>'});
+  const offline = L.divIcon({className:'', html:'<div style="width:20px;height:20px;border-radius:50%;background:#C1382A;border:3px solid white;box-shadow:0 0 0 3px #C1382A66;"></div>'});
+  L.marker([-8.838,13.671], {icon:online}).addTo(map).bindPopup('Régua Fluviométrica — Ponte de Mubungo');
+  L.marker([-8.845,13.665], {icon:online}).addTo(map).bindPopup('Pluviómetro — Escola Primária do Mubungo');
+  L.marker([-8.832,13.678], {icon:offline}).addTo(map).bindPopup('Régua Fluviométrica — Cais Velho (offline)');
+  setTimeout(()=>map.invalidateSize(),200);
+}
+
+// ---------- trend chart ----------
+let chartInited = false;
+function initChart(){
+  if(chartInited) return;
+  chartInited = true;
+  const ctx = document.getElementById('trendChart');
+  new Chart(ctx, {
+    type:'line',
+    data:{
+      labels:['00h','02h','04h','06h','08h','10h','12h','14h','16h','18h','20h','22h','Agora'],
+      datasets:[{
+        data:[1.55,1.58,1.6,1.65,1.7,1.78,1.85,1.92,1.98,2.02,2.06,2.11,2.15],
+        borderColor:'#2C8AA6',
+        backgroundColor:'rgba(44,138,166,.12)',
+        fill:true, tension:.35, pointRadius:0, borderWidth:2.5
+      }]
+    },
+    options:{
+      responsive:true,
+      plugins:{legend:{display:false}},
+      scales:{
+        y:{grid:{color:'#EFE6D2'}, ticks:{font:{family:'IBM Plex Mono', size:10}}, title:{display:true,text:'metros'}},
+        x:{grid:{display:false}, ticks:{font:{family:'IBM Plex Mono', size:10}}}
+      }
+    }
+  });
+}
+
+// ---------- decorative gauge wave ----------
+const decoFill = document.getElementById('decoWaterFill');
+if(decoFill){
+  let dir = 1, y = 150;
+  setInterval(()=>{
+    y += dir*0.15;
+    if(y < 130){dir=1;} if(y>160){dir=-1;}
+    decoFill.setAttribute('y', y.toFixed(2));
+    decoFill.setAttribute('height', (300-y).toFixed(2));
+  }, 60);
+}
+
+// ---------- language system (aplica-se a todo o sistema: login, painel e página pública) ----------
+const DEFAULT_ULTIMA = '__NUNCA__';
+const i18n = {
+  pt:{
+    loginTitle:'Entrar no sistema', loginSub:'Acesse o painel de monitorização do Bairro Mubungo.',
+    labelUser:'Utilizador ou e-mail', labelPass:'Senha', remember:'Manter sessão',
+    forgot:'Esqueci a minha senha', enterBtn:'Entrar', or:'ou',
+    noAccount:'Ainda não tem conta? <a href="#" onclick="openRegisterModal();return false;">Criar conta</a>',
+    roleNote:'O nível de acesso (Administrador, Técnico ou Voluntário) é definido automaticamente após a autenticação.',
+
+    grp2:'2 · Administração', grp34:'3–4 · Sensores', grp56:'5–6 · Documentos',
+    grp79:'7–9 · Comunicação e alertas', grp1012:'10–12 · Visão geral',
+    navUsuarios:'Gestão de Utilizadores', navSensoresMon:'Monitorização dos Sensores',
+    navTempoReal:'Monitorização em Tempo Real', navBoletins:'Gestão de Boletins',
+    navLaudos:'Gestão de Laudos Técnicos', navMensagens:'Mensagens / Suporte',
+    navAutoAlertas:'Emissão Automática de Alertas', navGestaoSensores:'Gestão dos Sensores',
+    navPainel:'Painel de Monitorização', navHistorico:'Histórico de Ocorrências',
+    navPublico:'Consulta Pública de Alertas', navSair:'Sair',
+
+    welcome:'Bem-vindo, Kiluanji', topLocation:'Bairro Mubungo · Província do Bengo — actualizado há 3 min',
+    alertLvl:'NÍVEL DE ALERTA: ATENÇÃO',
+    alertDesc:'O Rio Bengo subiu 34 cm nas últimas 6 horas junto à Ponte de Mubungo. Continue a monitorizar os sensores.',
+
+    mapTitle:'Mapa de sensores — Bairro Mubungo', mapOnline:'Sensor online', mapOffline:'Sensor offline',
+    mapFoot:'3 pontos de monitorização activos na área do bairro',
+
+    gaugeTitle:'Nível do Rio Bengo', lvlNormal:'Normal · até 1,20 m', lvlAtencao:'Atenção · 1,20–2,00 m',
+    lvlEmergencia:'Emergência · acima de 2,80 m', gaugeFoot:'Sensor: Régua Fluviométrica — Ponte de Mubungo',
+    sensorsCardTitle:'Estado dos sensores', trendCardTitle:'Variação do nível — últimas 24h',
+    boletinsCardTitle:'Boletins recentes',
+    statChuva:'Chuva acumulada 24h', statTemp:'Temperatura', statHum:'Humidade relativa', statSensores:'Sensores activos',
+
+    pgUsuariosTitle:'Gestão de Utilizadores',
+    pgUsuariosSub:'Cadastre, edite e controle os perfis e permissões de Administradores, Técnicos e Voluntários.',
+    btnNovoUsuario:'Novo utilizador', searchUsuarios:'Pesquisar por nome, utilizador ou e-mail…',
+    filterTodos:'Todos', roleAdmin:'Administrador', roleTecnico:'Técnico', roleVoluntario:'Voluntário',
+    thUtilizador:'Utilizador', thPerfil:'Perfil', thEstado:'Estado', thUltimaSessao:'Última sessão', thAccoes:'Acções',
+
+    pgSensoresMonTitle:'Monitorização dos Sensores',
+    pgSensoresMonSub:'Leituras em tempo real do sensor ultrassônico (nível da água) e do sensor de chuva, para identificar riscos de inundação.',
+    sensoresTransmitindo:'2 de 3 sensores a transmitir', sensorUltraTitle:'Sensor Ultrassônico — Nível da Água',
+    sensorChuvaTitle:'Sensor de Chuva — Intensidade',
+
+    pgTempoRealTitle:'Monitorização em Tempo Real',
+    pgTempoRealSub:'Painel contínuo com os dados recolhidos pelos sensores, actualizados automaticamente.',
+    registoAoVivo:'Registo ao vivo',
+
+    pgBoletinsTitle:'Gestão de Boletins',
+    pgBoletinsSub:'Registe, edite, pesquise e envie boletins técnicos sobre condições climáticas e hidrológicas.',
+    btnNovoBoletim:'Novo boletim', searchBoletins:'Pesquisar boletins…',
+    sevAtencao:'Atenção', sevInfo:'Informativo', sevNormal:'Normal',
+    thBoletim:'Boletim', thSeveridade:'Severidade', thData:'Data',
+
+    pgLaudosTitle:'Gestão de Laudos Técnicos',
+    pgLaudosSub:'Elabore, actualize, consulte e envie laudos técnicos sobre ocorrências de inundações.',
+    btnNovoLaudo:'Novo laudo', searchLaudos:'Pesquisar laudos por ocorrência ou técnico…',
+    thLaudo:'Laudo', thOcorrencia:'Ocorrência', thTecnico:'Técnico',
+
+    pgMensagensTitle:'Gestão de Mensagens / Suporte',
+    pgMensagensSub:'Crie, edite, pesquise e envie mensagens informativas para os utilizadores do sistema.',
+    btnNovaMensagem:'Nova mensagem', searchMensagens:'Pesquisar por assunto ou destinatário…',
+    thAssunto:'Assunto', thDestinatario:'Destinatário', thEnviada:'Enviada',
+
+    pgAutoAlertasTitle:'Emissão Automática de Alertas',
+    pgAutoAlertasSub:'Defina os limites de nível de água e intensidade de chuva que despoletam alertas automáticos.',
+    emissaoAutomatica:'Emissão automática',
+
+    pgGestaoSensoresTitle:'Gestão dos Sensores',
+    pgGestaoSensoresSub:'Acompanhe o estado dos sensores instalados no Bairro Mubungo e verifique o seu funcionamento.',
+    btnNovoSensor:'Novo sensor', thSensor:'Sensor', thTipo:'Tipo', thLocalizacao:'Localização', thBateria:'Bateria',
+
+    pgHistoricoTitle:'Histórico de Ocorrências',
+    pgHistoricoSub:'Registos de eventos, alertas emitidos, boletins e laudos para consulta futura.',
+    histAlertas:'Alertas', histBoletins:'Boletins', histLaudos:'Laudos',
+
+    backToLogin:'Voltar ao início de sessão', publicTitle:'Alertas do Bairro Mubungo',
+    publicLevel:'Nível de alerta actual: ATENÇÃO',
+
+    regTitle:'Criar nova conta', regSub:'Peça acesso ao sistema AlertaBengo. Um administrador poderá rever o seu perfil.',
+    regName:'Nome completo', regUser:'Utilizador', regEmail:'E-mail', regProfile:'Perfil pretendido',
+    regPass:'Senha', regPass2:'Confirmar senha', cancel:'Cancelar', regSubmit:'Criar conta',
+    regErrMismatch:'As senhas não coincidem.', regErrExists:'Já existe uma conta com este utilizador.',
+    regSuccess:'Conta criada com sucesso! Pode entrar agora.',
+
+    fpTitle:'Recuperar acesso', fpSub1:'Indique o seu utilizador ou e-mail. Enviaremos um código de verificação.',
+    fpSend:'Enviar código', fpTitle2:'Definir nova senha',
+    fpSub2:'Enviámos um código de 6 dígitos para o contacto associado a esta conta.',
+    fpCode:'Código de verificação', fpNewPass:'Nova senha', fpReset:'Redefinir senha',
+    fpErrCode:'Código de verificação incorrecto.', fpErrPass:'As senhas não coincidem ou são demasiado curtas.',
+    fpSuccess:'Senha redefinida com sucesso! Pode entrar com a nova senha.',
+    fpCodeSentToast:'Código de verificação enviado (demo):',
+
+    statusActivo:'Activo', statusInactivo:'Inactivo', nuncaAcedeu:'Nunca acedeu', de:'de',
+    unitUtilizadores:'utilizadores', unitBoletins:'boletins', unitLaudos:'laudos', unitMensagens:'mensagens',
+    unitSensoresRegistados:'sensores registados',
+    emptyUsers:'Nenhum utilizador encontrado.', emptyBoletins:'Nenhum boletim encontrado.',
+    emptyLaudos:'Nenhum laudo encontrado.', emptyMsgs:'Nenhuma mensagem encontrada.',
+    emptyHistorico:'Sem registos para este filtro.',
+    sensorOnline:'Online', sensorOffline:'Offline', sensorManutencao:'Em manutenção',
+    laudoRascunho:'Rascunho', laudoConcluido:'Concluído', laudoEnviado:'Enviado'
+  },
+  kmb:{
+    loginTitle:'Kwiingila mu sistema', loginSub:'Kwiingila mu painel dia kutala Mubungo.',
+    labelUser:'Mukwa-kaxamba/e-mail', labelPass:'Mbandu (senha)', remember:'Kusala kwiingila',
+    forgot:'Ngazenzele mbandu yami', enterBtn:'Kwiingila', or:'yovo',
+    noAccount:'Kua u kadi na conta? <a href="#" onclick="openRegisterModal();return false;">Vanga conta</a>',
+    roleNote:'Sensu dia kwiingila (Administrador, Técnico o Voluntário) di ilongwa ku kubanga o autenticação.',
+
+    grp2:'2 · Kutwala', grp34:'3–4 · Sensor', grp56:'5–6 · Madocumentu',
+    grp79:'7–9 · Kuvovela ni Alerta', grp1012:'10–12 · Mona Yoso',
+    navUsuarios:'Kutwala Akwa-kaxamba', navSensoresMon:'Kutala Sensor',
+    navTempoReal:'Kutala mu Tempo Real', navBoletins:'Kutwala Boletim',
+    navLaudos:'Kutwala Laudo Técnico', navMensagens:'Sapu / Kikwatekesu',
+    navAutoAlertas:'Kutuma Alerta ku Kixikanu', navGestaoSensores:'Kutwala Sensor',
+    navPainel:'Painel dia Kutala', navHistorico:'Makutu ma Kale',
+    navPublico:'Alerta ku Mundele Yoso', navSair:'Tunda',
+
+    welcome:'Ngi zaya kuya, Kiluanji', topLocation:'Mubungo · Bengo — ku suka mu 3 min',
+    alertLvl:'SENSU DIA ALERTA: TALA',
+    alertDesc:'O Kalunga ka Bengo kaya kutumbuka 34 cm mu 6h ia sunu, ku Ponte ia Mubungo. Kwenda kutala o sensor.',
+
+    mapTitle:'Mapa dia sensor — Mubungo', mapOnline:'Sensor mu kikalu', mapOffline:'Sensor ki mu kikalu',
+    mapFoot:'Ndonga 3 dia kutala mu kabila kua Mubungo dia mu kikalu',
+
+    gaugeTitle:'Sensu dia Kalunga ka Bengo', lvlNormal:'Diambote · te ku 1,20 m', lvlAtencao:'Tala · 1,20–2,00 m',
+    lvlEmergencia:'Emergência · vilu ku 2,80 m', gaugeFoot:'Sensor: Régua ia Kalunga — Ponte ia Mubungo',
+    sensorsCardTitle:'Sensu dia Sensor', trendCardTitle:'Muvimbi ua sensu — 24h ia sunu',
+    boletinsCardTitle:'Boletim ia Kishi',
+    statChuva:'Mvula ia 24h', statTemp:'Kalu', statHum:'Umidade', statSensores:'Sensor mu Kikalu',
+
+    pgUsuariosTitle:'Kutwala Akwa-kaxamba',
+    pgUsuariosSub:'Vanga, sokesa ni tala o profil ni maluvu ma Administrador, Técnico ni Voluntário.',
+    btnNovoUsuario:'Mukwa-kaxamba wa mona', searchUsuarios:'Sota ku dijina, mukwa-kaxamba o e-mail…',
+    filterTodos:'Oso', roleAdmin:'Administrador', roleTecnico:'Técnico', roleVoluntario:'Voluntário',
+    thUtilizador:'Mukwa-kaxamba', thPerfil:'Profil', thEstado:'Sensu', thUltimaSessao:'Sessão ia Kishi', thAccoes:'Vanga',
+
+    pgSensoresMonTitle:'Kutala Sensor',
+    pgSensoresMonSub:'Kutanga kua sensor dia mema (ultrassônico) ni sensor dia mvula, mu kusota o kituxi kia lunga.',
+    sensoresTransmitindo:'2 mu 3 sensor mu kutuma', sensorUltraTitle:'Sensor Ultrassônico — Sensu dia Mema',
+    sensorChuvaTitle:'Sensor dia Mvula — Ngolo',
+
+    pgTempoRealTitle:'Kutala mu Tempo Real',
+    pgTempoRealSub:'Painel dia kishi ni kutanga kua sensor, ku suka kikalu.',
+    registoAoVivo:'Makutu mu Kikalu',
+
+    pgBoletinsTitle:'Kutwala Boletim',
+    pgBoletinsSub:'Vanga, sokesa, sota ni tuma boletim técnico ia sensu dia mema ni ku tembu.',
+    btnNovoBoletim:'Boletim dia mona', searchBoletins:'Sota boletim…',
+    sevAtencao:'Tala', sevInfo:'Kuzayisa', sevNormal:'Diambote',
+    thBoletim:'Boletim', thSeveridade:'Ngolo', thData:'Kizua',
+
+    pgLaudosTitle:'Kutwala Laudo Técnico',
+    pgLaudosSub:'Vanga, sokesa, tala ni tuma laudo técnico ia makutu ma lunga.',
+    btnNovoLaudo:'Laudo dia mona', searchLaudos:'Sota laudo ku makutu o técnico…',
+    thLaudo:'Laudo', thOcorrencia:'Makutu', thTecnico:'Técnico',
+
+    pgMensagensTitle:'Kutwala Sapu / Kikwatekesu',
+    pgMensagensSub:'Vanga, sokesa, sota ni tuma sapu ku akwa-kaxamba a sistema.',
+    btnNovaMensagem:'Sapu ia mona', searchMensagens:'Sota ku assunto o mukwa-kaxamba…',
+    thAssunto:'Assunto', thDestinatario:'Mukwa-kaxamba', thEnviada:'Katumu',
+
+    pgAutoAlertasTitle:'Kutuma Alerta ku Kixikanu',
+    pgAutoAlertasSub:'Sika o sensu dia mema ni ngolo ia mvula i tuma alerta ku kixikanu.',
+    emissaoAutomatica:'Kutuma ku Kixikanu',
+
+    pgGestaoSensoresTitle:'Kutwala Sensor',
+    pgGestaoSensoresSub:'Tala o sensu dia sensor mu Mubungo ni ku vanga kizuelu.',
+    btnNovoSensor:'Sensor wa mona', thSensor:'Sensor', thTipo:'Ndenge', thLocalizacao:'Kabila', thBateria:'Bateria',
+
+    pgHistoricoTitle:'Makutu ma Kale',
+    pgHistoricoSub:'Makutu ma alerta, boletim ni laudo mu kutala kishi.',
+    histAlertas:'Alerta', histBoletins:'Boletim', histLaudos:'Laudo',
+
+    backToLogin:'Vutuka ku kwiingila', publicTitle:'Alerta ia Mubungo',
+    publicLevel:'Sensu dia alerta ia sunu: TALA',
+
+    regTitle:'Vanga conta ia mona', regSub:'Sota kwiingila mu sistema AlertaBengo. Administrador a tala o profil.',
+    regName:'Dijina dioso', regUser:'Mukwa-kaxamba', regEmail:'E-mail', regProfile:'Profil u zolo',
+    regPass:'Mbandu', regPass2:'Fila kavulu ka mbandu', cancel:'Xisa', regSubmit:'Vanga conta',
+    regErrMismatch:'O mbandu ki dituntu kumoxi.', regErrExists:'Conta ia mukwa-kaxamba iu i mu kikalu kiá.',
+    regSuccess:'Conta ia vangama kiambote! U tena kwiingila.',
+
+    fpTitle:'Vutula kwiingila', fpSub1:'Bika o mukwa-kaxamba o e-mail. Tuma-tuma kodigu dia kutwala.',
+    fpSend:'Tuma kodigu', fpTitle2:'Sika mbandu ia mona',
+    fpSub2:'Twa tumu kodigu ka madigitu 6 ku contactu ua conta iú.',
+    fpCode:'Kodigu dia kutwala', fpNewPass:'Mbandu ia mona', fpReset:'Sokesa mbandu',
+    fpErrCode:'Kodigu ki ambote.', fpErrPass:'O mbandu ki dituntu kumoxi o dia kavulu kavulu.',
+    fpSuccess:'Mbandu ia sokesa kiambote! U tena kwiingila ni mbandu ia mona.',
+    fpCodeSentToast:'Kodigu dia kutwala katumu (demo):',
+
+    statusActivo:'Mu Kikalu', statusInactivo:'Ki mu Kikalu', nuncaAcedeu:'Kiavengele kwiingila', de:'mu',
+    unitUtilizadores:'akwa-kaxamba', unitBoletins:'boletim', unitLaudos:'laudo', unitMensagens:'sapu',
+    unitSensoresRegistados:'sensor ma sonekene',
+    emptyUsers:'Kuxikise mukwa-kaxamba wehi.', emptyBoletins:'Kuxikise boletim dihi.',
+    emptyLaudos:'Kuxikise laudo dihi.', emptyMsgs:'Kuxikise sapu yehi.',
+    emptyHistorico:'Kuxikise makutu ku filtro iú.',
+    sensorOnline:'Mu Kikalu', sensorOffline:'Ki mu Kikalu', sensorManutencao:'Mu Kusokesa',
+    laudoRascunho:'Rascunho', laudoConcluido:'Kimana', laudoEnviado:'Katumu'
+  }
+};
+
+let currentLang = 'pt';
+function t(key){
+  const dict = i18n[currentLang] || i18n.pt;
+  return (dict && dict[key]!==undefined) ? dict[key] : (i18n.pt[key]!==undefined ? i18n.pt[key] : key);
+}
+function applyLang(lang){
+  if(!i18n[lang]) return;
+  currentLang = lang;
+  document.querySelectorAll('.lang-toggle').forEach(group=>{
+    group.querySelectorAll('.lang-chip').forEach(c=>{
+      c.classList.toggle('active', c.dataset.lang === lang);
+    });
+  });
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key = el.getAttribute('data-i18n');
+    const val = t(key);
+    if(val !== undefined) el.innerHTML = val;
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{
+    const key = el.getAttribute('data-i18n-ph');
+    const val = t(key);
+    if(val !== undefined) el.placeholder = val;
+  });
+  // re-renderiza conteúdo gerado por JS (rótulos dependem do idioma actual)
+  if(document.getElementById('usersTableBody')) renderUsers();
+  if(document.getElementById('boletinsTableBody')) renderBoletins();
+  if(document.getElementById('laudosTableBody')) renderLaudos();
+  if(document.getElementById('msgTableBody')) renderMensagens();
+  if(document.getElementById('sensorsTableBody')) renderSensorsGestao();
+  if(document.getElementById('historicoTimeline')) renderHistorico();
+}
+// delegação única: qualquer chip de idioma, em qualquer ecrã, aplica o mesmo idioma a todo o sistema
+document.addEventListener('click', function(e){
+  const chip = e.target.closest('.lang-chip');
+  if(!chip) return;
+  applyLang(chip.dataset.lang);
+});
+
+// ============ PÁGINA PÚBLICA (MÓDULO 12) ============
+function openPublicPage(){
+  document.getElementById('screen-login').classList.add('hidden');
+  document.getElementById('screen-dashboard').classList.add('hidden');
+  document.getElementById('screen-public').classList.add('active');
+}
+function closePublicPage(){
+  document.getElementById('screen-public').classList.remove('active');
+  document.getElementById('screen-login').classList.remove('hidden');
+}
+
+// ============ MÓDULOS 3 e 4 — MONITORIZAÇÃO / TEMPO REAL ============
+function fmtHora(){
+  const d = new Date();
+  return d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0')+':'+d.getSeconds().toString().padStart(2,'0');
+}
+let liveStarted = false;
+let ultraVal = 2.15, chuvaVal = 4.2;
+function startLiveFeeds(){
+  if(liveStarted) return;
+  liveStarted = true;
+  setInterval(()=>{
+    ultraVal = Math.max(1.8, Math.min(2.6, ultraVal + (Math.random()-0.45)*0.03));
+    chuvaVal = Math.max(0, Math.min(20, chuvaVal + (Math.random()-0.5)*1.2));
+    const ultraTxt = ultraVal.toFixed(2).replace('.',',');
+    const chuvaTxt = chuvaVal.toFixed(1).replace('.',',');
+
+    const smU = document.getElementById('smUltra'); if(smU) smU.innerHTML = ultraTxt+'<span>m</span>';
+    const smC = document.getElementById('smChuva'); if(smC) smC.innerHTML = chuvaTxt+'<span>mm/h</span>';
+    const rtU = document.getElementById('rtUltra'); if(rtU) rtU.innerHTML = ultraTxt+'<span>m</span>';
+    const rtUT = document.getElementById('rtUltraTime'); if(rtUT) rtUT.textContent = 'última leitura: '+fmtHora();
+    const rtCT = document.getElementById('rtChuvaTime'); if(rtCT) rtCT.textContent = 'última leitura: '+fmtHora();
+
+    prependFeed('feedUltra', `Régua — Ponte de Mubungo`, ultraTxt+' m');
+    prependFeed('feedChuva', `Pluviómetro — Escola Primária`, chuvaTxt+' mm/h');
+    prependFeed('feedRealtime', `Leitura combinada`, ultraTxt+' m · '+chuvaTxt+' mm/h');
+  }, 3500);
+}
+function prependFeed(id, label, val){
+  const el = document.getElementById(id);
+  if(!el) return;
+  const row = document.createElement('div');
+  row.className = 'feed-row';
+  row.innerHTML = `<span>${fmtHora()} — ${label}</span><b>${val}</b>`;
+  el.prepend(row);
+  while(el.children.length > 12) el.removeChild(el.lastChild);
+}
+
+// ============ MÓDULO 5 — GESTÃO DE BOLETINS ============
+let MOCK_BOLETINS = [
+  {id:1, titulo:'Boletim Nº 014 — Subida do nível do Rio Bengo', sev:'atencao', data:'03/08/2026 · 07:40'},
+  {id:2, titulo:'Previsão de chuva forte para as próximas 48h', sev:'info', data:'02/08/2026 · 18:00'},
+  {id:3, titulo:'Situação normalizada após chuvas de fim-de-semana', sev:'normal', data:'01/08/2026 · 09:15'},
+];
+let boletimFilter = 'todos', editingBoletimId = null;
+const sevLabel = new Proxy({}, {get:(_,sev)=>t('sev'+sev.charAt(0).toUpperCase()+sev.slice(1))});
+const sevClass = {atencao:'role-warn', info:'role-badge', normal:'role-safe'};
+function renderBoletins(){
+  const term = (document.getElementById('boletimSearch')?.value||'').toLowerCase();
+  const body = document.getElementById('boletinsTableBody');
+  if(!body) return;
+  const list = MOCK_BOLETINS.filter(b => (boletimFilter==='todos'||b.sev===boletimFilter) && b.titulo.toLowerCase().includes(term));
+  body.innerHTML = list.map(b=>`
+    <tr>
+      <td class="u-name">${b.titulo}</td>
+      <td><span class="role-badge ${sevClass[b.sev]}" style="${b.sev==='info'?'background:rgba(44,138,166,.16);color:var(--water-deep);':''}">${sevLabel[b.sev].toUpperCase()}</span></td>
+      <td class="u-email">${b.data}</td>
+      <td><div class="row-actions">
+        <div class="icon-action" title="Editar" onclick="openBoletimModal(${b.id})"><i class="bi bi-pencil"></i></div>
+        <div class="icon-action" title="Enviar" onclick="toastSend('Boletim enviado aos utilizadores')"><i class="bi bi-send"></i></div>
+        <div class="icon-action danger" title="Remover" onclick="deleteBoletim(${b.id})"><i class="bi bi-trash"></i></div>
+      </div></td>
+    </tr>`).join('') || `<tr><td colspan="4" style="text-align:center;color:var(--ink-soft);padding:32px;">${t('emptyBoletins')}</td></tr>`;
+  document.getElementById('boletimCount').textContent = `${list.length} ${t('de')} ${MOCK_BOLETINS.length} ${t('unitBoletins')}`;
+}
+function setBoletimFilter(chip){
+  document.querySelectorAll('#page-boletins .filter-chip').forEach(c=>c.classList.remove('active'));
+  chip.classList.add('active'); boletimFilter = chip.dataset.sev; renderBoletins();
+}
+function openBoletimModal(id){
+  editingBoletimId = id||null;
+  document.getElementById('boletimModalTitle').textContent = id? 'Editar boletim':'Novo boletim';
+  if(id){ const b = MOCK_BOLETINS.find(x=>x.id===id);
+    document.getElementById('bo-titulo').value=b.titulo; document.getElementById('bo-severidade').value=b.sev; document.getElementById('bo-conteudo').value=b.conteudo||'';
+  } else { document.getElementById('boletimForm').reset(); }
+  document.getElementById('boletimModal').classList.add('show');
+}
+function closeBoletimModal(){ document.getElementById('boletimModal').classList.remove('show'); }
+document.getElementById('boletimForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  const titulo=document.getElementById('bo-titulo').value.trim(), sev=document.getElementById('bo-severidade').value, conteudo=document.getElementById('bo-conteudo').value.trim();
+  const dataStr = new Date().toLocaleDateString('pt-PT')+' · '+fmtHora().slice(0,5);
+  if(editingBoletimId){ Object.assign(MOCK_BOLETINS.find(x=>x.id===editingBoletimId), {titulo, sev, conteudo}); }
+  else{ MOCK_BOLETINS.unshift({id:Date.now(), titulo, sev, conteudo, data:dataStr}); }
+  closeBoletimModal(); renderBoletins();
+});
+function deleteBoletim(id){ MOCK_BOLETINS = MOCK_BOLETINS.filter(b=>b.id!==id); renderBoletins(); }
+
+// ============ MÓDULO 6 — GESTÃO DE LAUDOS TÉCNICOS ============
+let MOCK_LAUDOS = [
+  {id:1, ocorrencia:'Cheia — Ponte de Mubungo', tecnico:'Kiluanji Mendes', estado:'concluido'},
+  {id:2, ocorrencia:'Transbordo — Cais Velho', tecnico:'Manuel Bumba', estado:'rascunho'},
+];
+const laudoEstadoLabel = new Proxy({}, {get:(_,e)=>t('laudo'+e.charAt(0).toUpperCase()+e.slice(1))});
+const laudoEstadoClass = {rascunho:'role-neutral', concluido:'role-safe', enviado:'role-badge'};
+let editingLaudoId = null;
+function renderLaudos(){
+  const term=(document.getElementById('laudoSearch')?.value||'').toLowerCase();
+  const body = document.getElementById('laudosTableBody'); if(!body) return;
+  const list = MOCK_LAUDOS.filter(l=>l.ocorrencia.toLowerCase().includes(term)||l.tecnico.toLowerCase().includes(term));
+  body.innerHTML = list.map(l=>`
+    <tr>
+      <td class="u-name">Laudo Nº ${String(l.id).padStart(3,'0')}</td>
+      <td>${l.ocorrencia}</td>
+      <td class="u-email">${l.tecnico}</td>
+      <td><span class="role-badge ${laudoEstadoClass[l.estado]}" style="${l.estado==='enviado'?'background:rgba(44,138,166,.16);color:var(--water-deep);':''}">${laudoEstadoLabel[l.estado].toUpperCase()}</span></td>
+      <td><div class="row-actions">
+        <div class="icon-action" title="Editar" onclick="openLaudoModal(${l.id})"><i class="bi bi-pencil"></i></div>
+        <div class="icon-action" title="Enviar" onclick="toastSend('Laudo técnico enviado')"><i class="bi bi-send"></i></div>
+        <div class="icon-action danger" title="Remover" onclick="deleteLaudo(${l.id})"><i class="bi bi-trash"></i></div>
+      </div></td>
+    </tr>`).join('') || `<tr><td colspan="5" style="text-align:center;color:var(--ink-soft);padding:32px;">${t('emptyLaudos')}</td></tr>`;
+  document.getElementById('laudoCount').textContent = `${list.length} ${t('de')} ${MOCK_LAUDOS.length} ${t('unitLaudos')}`;
+}
+function openLaudoModal(id){
+  editingLaudoId=id||null;
+  document.getElementById('laudoModalTitle').textContent = id?'Editar laudo técnico':'Novo laudo técnico';
+  if(id){ const l=MOCK_LAUDOS.find(x=>x.id===id);
+    document.getElementById('la-ocorrencia').value=l.ocorrencia; document.getElementById('la-tecnico').value=l.tecnico; document.getElementById('la-estado').value=l.estado; document.getElementById('la-obs').value=l.obs||'';
+  } else { document.getElementById('laudoForm').reset(); }
+  document.getElementById('laudoModal').classList.add('show');
+}
+function closeLaudoModal(){ document.getElementById('laudoModal').classList.remove('show'); }
+document.getElementById('laudoForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  const ocorrencia=document.getElementById('la-ocorrencia').value.trim(), tecnico=document.getElementById('la-tecnico').value.trim(), estado=document.getElementById('la-estado').value, obs=document.getElementById('la-obs').value.trim();
+  if(editingLaudoId){ Object.assign(MOCK_LAUDOS.find(x=>x.id===editingLaudoId), {ocorrencia, tecnico, estado, obs}); }
+  else{ MOCK_LAUDOS.unshift({id:Date.now(), ocorrencia, tecnico, estado, obs}); }
+  closeLaudoModal(); renderLaudos();
+});
+function deleteLaudo(id){ MOCK_LAUDOS = MOCK_LAUDOS.filter(l=>l.id!==id); renderLaudos(); }
+
+// ============ MÓDULO 7 — MENSAGENS / SUPORTE ============
+let MOCK_MSGS = [
+  {id:1, assunto:'Reunião de coordenação semanal', dest:'Técnicos', estado:'enviado', data:'01/08/2026'},
+  {id:2, assunto:'Actualização do procedimento de evacuação', dest:'Todos os utilizadores', estado:'enviado', data:'28/07/2026'},
+];
+function renderMensagens(){
+  const term=(document.getElementById('msgSearch')?.value||'').toLowerCase();
+  const body = document.getElementById('msgTableBody'); if(!body) return;
+  const list = MOCK_MSGS.filter(m=>m.assunto.toLowerCase().includes(term)||m.dest.toLowerCase().includes(term));
+  body.innerHTML = list.map(m=>`
+    <tr>
+      <td class="u-name">${m.assunto}</td>
+      <td>${m.dest}</td>
+      <td><span class="role-badge role-safe">ENVIADA</span></td>
+      <td class="u-email">${m.data}</td>
+      <td><div class="row-actions">
+        <div class="icon-action" title="Ver"><i class="bi bi-eye"></i></div>
+        <div class="icon-action danger" title="Remover" onclick="deleteMsg(${m.id})"><i class="bi bi-trash"></i></div>
+      </div></td>
+    </tr>`).join('') || `<tr><td colspan="5" style="text-align:center;color:var(--ink-soft);padding:32px;">${t('emptyMsgs')}</td></tr>`;
+  document.getElementById('msgCount').textContent = `${list.length} ${t('de')} ${MOCK_MSGS.length} ${t('unitMensagens')}`;
+}
+function openMsgModal(){ document.getElementById('msgForm').reset(); document.getElementById('msgModal').classList.add('show'); }
+function closeMsgModal(){ document.getElementById('msgModal').classList.remove('show'); }
+document.getElementById('msgForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  const dest=document.getElementById('ms-dest').value, assunto=document.getElementById('ms-assunto').value.trim();
+  MOCK_MSGS.unshift({id:Date.now(), assunto, dest, estado:'enviado', data:new Date().toLocaleDateString('pt-PT')});
+  closeMsgModal(); renderMensagens(); toastSend('Mensagem enviada com sucesso');
+});
+function deleteMsg(id){ MOCK_MSGS = MOCK_MSGS.filter(m=>m.id!==id); renderMensagens(); }
+
+// ============ MÓDULO 9 — GESTÃO DOS SENSORES (dispositivos) ============
+let MOCK_SENSORES = [
+  {id:1, nome:'Régua Fluviométrica — Ponte de Mubungo', tipo:'Arduino Uno', local:'Bairro Mubungo', estado:'online', bateria:88},
+  {id:2, nome:'Pluviómetro — Escola Primária do Mubungo', tipo:'ESP32', local:'Bairro Mubungo', estado:'online', bateria:64},
+  {id:3, nome:'Régua Fluviométrica — Cais Velho', tipo:'ESP32', local:'Bairro Mubungo', estado:'offline', bateria:12},
+];
+let editingSensorId = null;
+const sensorEstadoLabel = new Proxy({}, {get:(_,e)=>t('sensor'+e.charAt(0).toUpperCase()+e.slice(1))});
+const sensorEstadoClass = {online:'role-safe', offline:'role-danger', manutencao:'role-warn'};
+function renderSensorsGestao(){
+  const body = document.getElementById('sensorsTableBody'); if(!body) return;
+  body.innerHTML = MOCK_SENSORES.map(s=>`
+    <tr>
+      <td class="u-name">${s.nome}</td>
+      <td class="u-email">${s.tipo}</td>
+      <td>${s.local}</td>
+      <td><span class="role-badge ${sensorEstadoClass[s.estado]}">${sensorEstadoLabel[s.estado].toUpperCase()}</span></td>
+      <td class="u-email">${s.bateria}%</td>
+      <td><div class="row-actions">
+        <div class="icon-action" title="Testar ligação" onclick="toastSend('A testar ligação com '+'${s.nome}'.split(' — ')[0]+'…')"><i class="bi bi-plug"></i></div>
+        <div class="icon-action" title="Editar" onclick="openSensorModal(${s.id})"><i class="bi bi-pencil"></i></div>
+        <div class="icon-action danger" title="Remover" onclick="deleteSensor(${s.id})"><i class="bi bi-trash"></i></div>
+      </div></td>
+    </tr>`).join('');
+  document.getElementById('sensorCount').textContent = `${MOCK_SENSORES.length} ${t('unitSensoresRegistados')}`;
+}
+function openSensorModal(id){
+  editingSensorId=id||null;
+  document.getElementById('sensorModalTitle').textContent = id?'Editar sensor':'Novo sensor';
+  if(id){ const s=MOCK_SENSORES.find(x=>x.id===id);
+    document.getElementById('se-nome').value=s.nome; document.getElementById('se-tipo').value=s.tipo; document.getElementById('se-local').value=s.local; document.getElementById('se-estado').value=s.estado;
+  } else { document.getElementById('sensorForm').reset(); }
+  document.getElementById('sensorModal').classList.add('show');
+}
+function closeSensorModal(){ document.getElementById('sensorModal').classList.remove('show'); }
+document.getElementById('sensorForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  const nome=document.getElementById('se-nome').value.trim(), tipo=document.getElementById('se-tipo').value, local=document.getElementById('se-local').value.trim(), estado=document.getElementById('se-estado').value;
+  if(editingSensorId){ Object.assign(MOCK_SENSORES.find(x=>x.id===editingSensorId), {nome, tipo, local, estado}); }
+  else{ MOCK_SENSORES.unshift({id:Date.now(), nome, tipo, local, estado, bateria:100}); }
+  closeSensorModal(); renderSensorsGestao();
+});
+function deleteSensor(id){ MOCK_SENSORES = MOCK_SENSORES.filter(s=>s.id!==id); renderSensorsGestao(); }
+
+// ============ MÓDULO 11 — HISTÓRICO DE OCORRÊNCIAS ============
+const MOCK_HISTORICO = [
+  {tipo:'alerta', cls:'tl-danger', data:'14/03/2026 · 22:05', titulo:'Alerta de Emergência emitido', desc:'Chuva de 41 mm/h detectada; população junto ao rio notificada por SMS.'},
+  {tipo:'boletim', cls:'', data:'02/08/2026 · 18:00', titulo:'Boletim Nº 013 emitido', desc:'Previsão de chuva forte para as próximas 48 horas.'},
+  {tipo:'laudo', cls:'', data:'20/07/2026', titulo:'Laudo técnico concluído', desc:'Vistoria à Ponte de Mubungo após cheia de Julho.'},
+  {tipo:'alerta', cls:'tl-safe', data:'01/08/2026 · 09:15', titulo:'Situação normalizada', desc:'Nível do rio voltou a valores normais após chuvas de fim-de-semana.'},
+];
+let histFilter = 'todos';
+function renderHistorico(){
+  const el = document.getElementById('historicoTimeline'); if(!el) return;
+  const list = MOCK_HISTORICO.filter(h=>histFilter==='todos'||h.tipo===histFilter);
+  el.innerHTML = list.map(h=>`
+    <div class="tl-item ${h.cls}">
+      <div class="tl-date">${h.data}</div>
+      <div class="tl-title">${h.titulo}</div>
+      <div class="tl-desc">${h.desc}</div>
+    </div>`).join('') || `<div style="color:var(--ink-soft);font-size:.88rem;">${t('emptyHistorico')}</div>`;
+}
+function setHistFilter(chip){
+  document.querySelectorAll('#page-historico .filter-chip').forEach(c=>c.classList.remove('active'));
+  chip.classList.add('active'); histFilter = chip.dataset.tipo; renderHistorico();
+}
+
+// ---------- toast genérico de envio ----------
+function toastSend(msg){
+  const c = document.getElementById('toast-container');
+  const t = document.createElement('div');
+  t.className = 'toast-msg';
+  t.innerHTML = `<i class="bi bi-check-circle"></i> ${msg}`;
+  c.appendChild(t);
+  requestAnimationFrame(()=>t.classList.add('show'));
+  setTimeout(()=>{ t.classList.remove('show'); setTimeout(()=>t.remove(),300); }, 2600);
+}
+</script>
+</body>
+</html>
